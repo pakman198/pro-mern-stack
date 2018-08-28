@@ -221,7 +221,7 @@ var IssueList = function (_React$Component5) {
 
         var _this5 = _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).call(this));
 
-        _this5.state = { issues: issues };
+        _this5.state = { issues: [] };
         setTimeout(_this5.createTestIssue.bind(_this5), 2000);
         return _this5;
     }
@@ -243,6 +243,20 @@ var IssueList = function (_React$Component5) {
                 created: new Date(),
                 title: 'Completion date should be optional'
             });
+        }
+    }, {
+        key: 'loadData',
+        value: function loadData() {
+            var _this6 = this;
+
+            setTimeout(function () {
+                _this6.setState({ issues: issues });
+            }, 500);
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.loadData();
         }
     }, {
         key: 'render',

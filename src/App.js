@@ -81,7 +81,7 @@ const issues = [
 class IssueList extends React.Component {
     constructor() {
         super();
-        this.state = { issues }
+        this.state = { issues: [] }
         setTimeout(this.createTestIssue.bind(this), 2000);
     }
 
@@ -99,6 +99,16 @@ class IssueList extends React.Component {
             created: new Date(),
             title: 'Completion date should be optional'
         });
+    }
+
+    loadData() {
+        setTimeout(() => {
+            this.setState({ issues })
+        }, 500);
+    }
+
+    componentDidMount() {
+        this.loadData();
     }
 
     render() {
