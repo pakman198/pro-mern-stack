@@ -11,7 +11,7 @@ class IssueFilter extends React.Component {
 class IssueRow extends React.Component {
     render() {
         const {id, status, owner, created, effort, completionDate, title} = this.props.issue;
-        console.log('issueRow')
+        
         return (
             <tr>
                 <td>{ id }</td>
@@ -82,7 +82,8 @@ class IssueList extends React.Component {
     constructor() {
         super();
         this.state = { issues: [] }
-        setTimeout(this.createTestIssue.bind(this), 2000);
+        this.createTestIssue = this.createTestIssue.bind(this);
+        setTimeout(this.createTestIssue, 2000);
     }
 
     createIssue(newIssue) {
@@ -119,6 +120,7 @@ class IssueList extends React.Component {
                 <IssueFilter />
                 <hr />
                 <IssueTable issues={this.state.issues} />
+                <button onClick={this.createTestIssue}>Add</button>
                 <hr />
                 <IssueAdd />
             </div>
