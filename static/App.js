@@ -52,7 +52,7 @@ var IssueRow = function (_React$Component2) {
                 completionDate = _props$issue.completionDate,
                 title = _props$issue.title;
 
-
+            console.log('issueRow');
             return React.createElement(
                 'tr',
                 null,
@@ -195,35 +195,59 @@ var IssueAdd = function (_React$Component4) {
     return IssueAdd;
 }(React.Component);
 
+var issues = [{
+    id: 1,
+    status: 'Open',
+    owner: 'Ravan',
+    created: new Date('2016-08-15'),
+    effort: 5,
+    completionDate: undefined,
+    title: 'Error in console when clicking Add'
+}, {
+    id: 2,
+    status: 'Assigned',
+    owner: 'Eddie',
+    created: new Date('2016-08-16'),
+    effort: 14,
+    completionDate: new Date('2016-08-30'),
+    title: 'Missing bottom border on panel'
+}];
+
 var IssueList = function (_React$Component5) {
     _inherits(IssueList, _React$Component5);
 
     function IssueList() {
         _classCallCheck(this, IssueList);
 
-        return _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).apply(this, arguments));
+        var _this5 = _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).call(this));
+
+        _this5.state = { issues: issues };
+        setTimeout(_this5.createTestIssue.bind(_this5), 2000);
+        return _this5;
     }
 
     _createClass(IssueList, [{
+        key: 'createIssue',
+        value: function createIssue(newIssue) {
+            var newIssues = this.state.issues.slice();
+            newIssue.id = this.state.issues.length + 1;
+            newIssues.push(newIssue);
+            this.setState({ issues: newIssues });
+        }
+    }, {
+        key: 'createTestIssue',
+        value: function createTestIssue() {
+            this.createIssue({
+                status: 'New',
+                owner: 'Pieta',
+                created: new Date(),
+                title: 'Completion date should be optional'
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
-            var issues = [{
-                id: 1,
-                status: 'Open',
-                owner: 'Ravan',
-                created: new Date('2016-08-15'),
-                effort: 5,
-                completionDate: undefined,
-                title: 'Error in console when clicking Add'
-            }, {
-                id: 2,
-                status: 'Assigned',
-                owner: 'Eddie',
-                created: new Date('2016-08-16'),
-                effort: 14,
-                completionDate: new Date('2016-08-30'),
-                title: 'Missing bottom border on panel'
-            }];
+
             return React.createElement(
                 'div',
                 null,
@@ -234,7 +258,7 @@ var IssueList = function (_React$Component5) {
                 ),
                 React.createElement(IssueFilter, null),
                 React.createElement('hr', null),
-                React.createElement(IssueTable, { issues: issues }),
+                React.createElement(IssueTable, { issues: this.state.issues }),
                 React.createElement('hr', null),
                 React.createElement(IssueAdd, null)
             );

@@ -11,7 +11,7 @@ class IssueFilter extends React.Component {
 class IssueRow extends React.Component {
     render() {
         const {id, status, owner, created, effort, completionDate, title} = this.props.issue;
-
+        console.log('issueRow')
         return (
             <tr>
                 <td>{ id }</td>
@@ -57,34 +57,58 @@ class IssueAdd extends React.Component {
     }
 }
 
+const issues = [
+    {
+        id: 1,
+        status: 'Open',
+        owner: 'Ravan',
+        created: new Date('2016-08-15'),
+        effort: 5,
+        completionDate: undefined,
+        title: 'Error in console when clicking Add'
+    },
+    {
+        id: 2,
+        status: 'Assigned',
+        owner: 'Eddie',
+        created: new Date('2016-08-16'),
+        effort: 14,
+        completionDate: new Date('2016-08-30'),
+        title: 'Missing bottom border on panel'
+    }
+];
+
 class IssueList extends React.Component {
+    constructor() {
+        super();
+        this.state = { issues }
+        setTimeout(this.createTestIssue.bind(this), 2000);
+    }
+
+    createIssue(newIssue) {
+        const newIssues = this.state.issues.slice();
+        newIssue.id = this.state.issues.length + 1;
+        newIssues.push(newIssue);
+        this.setState({ issues: newIssues });
+    }
+
+    createTestIssue() {
+        this.createIssue({
+            status: 'New',
+            owner: 'Pieta',
+            created: new Date(),
+            title: 'Completion date should be optional'
+        });
+    }
+
     render() {
-        const issues = [
-            {
-                id: 1,
-                status: 'Open',
-                owner: 'Ravan',
-                created: new Date('2016-08-15'),
-                effort: 5,
-                completionDate: undefined,
-                title: 'Error in console when clicking Add'
-            },
-            {
-                id: 2,
-                status: 'Assigned',
-                owner: 'Eddie',
-                created: new Date('2016-08-16'),
-                effort: 14,
-                completionDate: new Date('2016-08-30'),
-                title: 'Missing bottom border on panel'
-            }
-        ];
+        
         return (
             <div>
                 <h1>TIssue Tracker</h1>
                 <IssueFilter />
                 <hr />
-                <IssueTable issues={issues} />
+                <IssueTable issues={this.state.issues} />
                 <hr />
                 <IssueAdd />
             </div>
