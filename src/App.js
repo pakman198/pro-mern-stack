@@ -89,17 +89,26 @@ class IssueList extends React.Component {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newIssue)
-        })
-            .then( response => response.json())
-            .then(updatedIssue => {
-                updatedIssue.created = new Date(updatedIssue.created);
-                if(updatedIssue.completionDate) {
-                    updatedIssue.completionDate = new Date(updatedIssue.completionDate);
-                }
 
-                const newIssues = this.state.issues.concat(updatedIssue);
-                this.setState({ issues: newIssues });
-            })
+        }).then( response => {
+            if(response.ok){
+                response.json().then(updatedIssue => {
+                    updatedIssue.created = new Date(updatedIssue.created);
+                    if(updatedIssue.completionDate) {
+                        updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+                    }
+    
+                    const newIssues = this.state.issues.concat(updatedIssue);
+                    this.setState({ issues: newIssues });
+                })
+                
+            } else {
+                response.json().then(err => {
+                    alert(`Failed to add issue: ${err.message}`);
+                });
+            }
+        })
+            
             .catch(err => {
                 console.log(`Error in sending data to the server: ${err.message}`)
             })
