@@ -209,19 +209,51 @@ var IssueList = function (_React$Component3) {
     _createClass(IssueList, [{
         key: 'createIssue',
         value: function createIssue(newIssue) {
-            var newIssues = this.state.issues.slice();
-            newIssue.id = this.state.issues.length + 1;
-            newIssues.push(newIssue);
-            this.setState({ issues: newIssues });
+            var _this4 = this;
+
+            fetch('/api/issues', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newIssue)
+            }).then(function (response) {
+                return response.json();
+            }).then(function (updatedIssue) {
+                updatedIssue.created = new Date(updatedIssue.created);
+                if (updatedIssue.completionDate) {
+                    updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+                }
+
+                var newIssues = _this4.state.issues.concat(updatedIssue);
+                _this4.setState({ issues: newIssues });
+            }).catch(function (err) {
+                console.log('Error in sending data to the server: ' + err.message);
+            });
         }
     }, {
         key: 'loadData',
         value: function loadData() {
-            var _this4 = this;
+            var _this5 = this;
 
-            setTimeout(function () {
-                _this4.setState({ issues: issues });
-            }, 500);
+            fetch('/api/issues').then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                var records = data.records,
+                    total_count = data._metadata.total_count;
+
+
+                console.log('Total count of records: ' + total_count);
+
+                records.forEach(function (issue) {
+                    issue.created = new Date(issue.created);
+                    if (issue.completionDate) {
+                        issue.completionDate = new Date(issue.completionDate);
+                    }
+                });
+
+                _this5.setState({ issues: records });
+            }).catch(function (err) {
+                console.log(err);
+            });
         }
     }, {
         key: 'componentDidMount',

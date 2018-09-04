@@ -85,16 +85,46 @@ class IssueList extends React.Component {
     }
 
     createIssue(newIssue) {
-        const newIssues = this.state.issues.slice();
-        newIssue.id = this.state.issues.length + 1;
-        newIssues.push(newIssue);
-        this.setState({ issues: newIssues });
+        fetch('/api/issues', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newIssue)
+        })
+            .then( response => response.json())
+            .then(updatedIssue => {
+                updatedIssue.created = new Date(updatedIssue.created);
+                if(updatedIssue.completionDate) {
+                    updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+                }
+
+                const newIssues = this.state.issues.concat(updatedIssue);
+                this.setState({ issues: newIssues });
+            })
+            .catch(err => {
+                console.log(`Error in sending data to the server: ${err.message}`)
+            })
     }
 
     loadData() {
-        setTimeout(() => {
-            this.setState({ issues })
-        }, 500);
+        fetch('/api/issues')
+            .then(response => response.json())
+            .then(data => {
+                const {records, _metadata: {total_count}} = data;
+                
+                console.log(`Total count of records: ${total_count}`);
+
+                records.forEach(issue => {
+                    issue.created = new Date(issue.created);
+                    if (issue.completionDate) {
+                        issue.completionDate = new Date(issue.completionDate);
+                    }
+                });
+
+                this.setState({ issues: records})
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     componentDidMount() {
