@@ -9,11 +9,11 @@ class IssueFilter extends React.Component {
 }
 
 const IssueRow = (props) => {
-    const {id, status, owner, created, effort, completionDate, title} = props.issue;
+    const {_id, status, owner, created, effort, completionDate, title} = props.issue;
 
     return (
         <tr>
-            <td>{ id }</td>
+            <td>{ _id }</td>
             <td>{ status }</td>
             <td>{ owner }</td>
             <td>{ created.toDateString() }</td>
@@ -25,7 +25,7 @@ const IssueRow = (props) => {
 }
 
 const IssueTable = (props) => {
-    const issueRows = props.issues.map(issue => <IssueRow key={issue.id} issue={issue} />);
+    const issueRows = props.issues.map(issue => <IssueRow key={issue._id} issue={issue} />);
 
     return (
         <table className="bordered-table">
@@ -116,23 +116,29 @@ class IssueList extends React.Component {
 
     loadData() {
         fetch('/api/issues')
-            .then(response => response.json())
-            .then(data => {
-                const {records, _metadata: {total_count}} = data;
-                
-                console.log(`Total count of records: ${total_count}`);
-
-                records.forEach(issue => {
-                    issue.created = new Date(issue.created);
-                    if (issue.completionDate) {
-                        issue.completionDate = new Date(issue.completionDate);
-                    }
-                });
-
-                this.setState({ issues: records})
-            })
-            .catch(err => {
-                console.log(err);
+            .then(response => {
+                if (response.ok) {
+                    response.json().then(data => {
+                        const {records, _metadata: {total_count}} = data;
+                        
+                        console.log(`Total count of records: ${total_count}`);
+        
+                        records.forEach(issue => {
+                            issue.created = new Date(issue.created);
+                            if (issue.completionDate) {
+                                issue.completionDate = new Date(issue.completionDate);
+                            }
+                        });
+        
+                        this.setState({ issues: records });
+                    });
+                } else {
+                    response.json().then(err => {
+                        alert('Failed to fetch issues: ' + error.message);
+                    });
+                }
+            }).catch(err => {
+               alert('Error in fetching data from server:', err);
             });
     }
 

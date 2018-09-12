@@ -33,7 +33,7 @@ var IssueFilter = function (_React$Component) {
 
 var IssueRow = function IssueRow(props) {
     var _props$issue = props.issue,
-        id = _props$issue.id,
+        _id = _props$issue._id,
         status = _props$issue.status,
         owner = _props$issue.owner,
         created = _props$issue.created,
@@ -48,7 +48,7 @@ var IssueRow = function IssueRow(props) {
         React.createElement(
             'td',
             null,
-            id
+            _id
         ),
         React.createElement(
             'td',
@@ -85,7 +85,7 @@ var IssueRow = function IssueRow(props) {
 
 var IssueTable = function IssueTable(props) {
     var issueRows = props.issues.map(function (issue) {
-        return React.createElement(IssueRow, { key: issue.id, issue: issue });
+        return React.createElement(IssueRow, { key: issue._id, issue: issue });
     });
 
     return React.createElement(
@@ -242,24 +242,30 @@ var IssueList = function (_React$Component3) {
             var _this5 = this;
 
             fetch('/api/issues').then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                var records = data.records,
-                    total_count = data._metadata.total_count;
+                if (response.ok) {
+                    response.json().then(function (data) {
+                        var records = data.records,
+                            total_count = data._metadata.total_count;
 
 
-                console.log('Total count of records: ' + total_count);
+                        console.log('Total count of records: ' + total_count);
 
-                records.forEach(function (issue) {
-                    issue.created = new Date(issue.created);
-                    if (issue.completionDate) {
-                        issue.completionDate = new Date(issue.completionDate);
-                    }
-                });
+                        records.forEach(function (issue) {
+                            issue.created = new Date(issue.created);
+                            if (issue.completionDate) {
+                                issue.completionDate = new Date(issue.completionDate);
+                            }
+                        });
 
-                _this5.setState({ issues: records });
+                        _this5.setState({ issues: records });
+                    });
+                } else {
+                    response.json().then(function (err) {
+                        alert('Failed to fetch issues: ' + error.message);
+                    });
+                }
             }).catch(function (err) {
-                console.log(err);
+                alert('Error in fetching data from server:', err);
             });
         }
     }, {
