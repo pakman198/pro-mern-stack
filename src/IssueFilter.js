@@ -1,3 +1,5 @@
+import React from 'react';
+
 class IssueFilter extends React.Component {
     render() {
         return (

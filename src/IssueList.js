@@ -1,3 +1,5 @@
+import React from 'react';
+
 import IssueAdd from './IssueAdd';
 import IssueFilter from './IssueFilter';
 

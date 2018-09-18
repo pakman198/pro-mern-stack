@@ -1,10 +1,26 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-    entry: './src/App.js',
+    entry: {
+        // the key will be the file name. 
+        // if entry is a string instead of an object, the name by default is main
+        app: './src/App.js'
+    },
     output: {
         path: path.resolve(__dirname, 'static'),
-        filename: 'app.bundle.js'
+        filename: '[name].bundle.js'
+    },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                  test: /[\\/]node_modules[\\/](react|react-dom|whatwg-fetch)[\\/]/,
+                  name: 'vendor',
+                  chunks: 'all',
+                }
+            }
+        }
     },
     module: {
         rules: [

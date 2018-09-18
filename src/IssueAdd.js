@@ -1,3 +1,5 @@
+import React from 'react';
+
 class IssueAdd extends React.Component {
     constructor(){
         super();
