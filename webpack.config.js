@@ -5,10 +5,10 @@ module.exports = {
     entry: {
         // the key will be the file name. 
         // if entry is a string instead of an object, the name by default is main
-        app: './src/App.js'
+        app: ['./src/App.js']
     },
     output: {
-        path: path.resolve(__dirname, 'static'),
+        path: path.resolve(__dirname, './static'),
         filename: '[name].bundle.js'
     },
     optimization: {
@@ -36,10 +36,15 @@ module.exports = {
     devServer: {
         port: 8000,
         contentBase: 'static',
+        hot: true,
         proxy: {
             '/api/*' : {
                 target: 'http://localhost:3000'
             }
         }
-    }
+    },
+    devtool: 'source-map',
+    plugins: [
+        
+    ]
 }
