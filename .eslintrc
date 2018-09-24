@@ -1,0 +1,16 @@
+{
+    "extends": [
+        "airbnb",
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "env": {
+        "browser": true,
+        "jasmine": true
+    },
+    "rules": {
+        "react/jsx-filename-extension": [1, {"extensions": [".js"]}],
+        "no-param-reassign": ["error", { "props": false }],
+        "no-underscore-dangle": ["error", { "allow": ["_id"] }]
+    }
+}

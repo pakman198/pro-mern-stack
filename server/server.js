@@ -1,9 +1,9 @@
 import express from 'express';
 import  bodyParser from 'body-parser';
 import { MongoClient } from 'mongodb';
-import Issue from './issue.js';
-import '@babel/polyfill';
 import SourceMapSupport from 'source-map-support';
+import Issue from './issue';
+import '@babel/polyfill';
 
 SourceMapSupport.install();
 
@@ -53,7 +53,7 @@ app.post('/api/issues', (req, res) => {
         return;
     }
 
-    db.collection('issues').insertOne(newIssue).then(result => 
+    db.collection('issues').insertOne(Issue.cleanupIssue(newIssue)).then(result => 
         db.collection('issues').find({ _id: result.insertedId }).limit(1).next()
     ).then(newIssue => {
         res.json(newIssue);
@@ -71,5 +71,5 @@ MongoClient.connect('mongodb://localhost/issuetracker').then(connection => {
         console.log('App listening on port 3000');
     }); 
 }).catch(err => {
-    console.log('ERROR:', error);
+    console.log('ERROR:', err);
 });
