@@ -14,7 +14,7 @@ module.exports = {
     splitChunks: {
       cacheGroups: {
         vendor: {
-          test: /[\\/]node_modules[\\/](react|react-dom|whatwg-fetch)[\\/]/,
+          test: /[\\/]node_modules[\\/](react|react-dom|whatwg-fetch|react-router-dom)[\\/]/,
           name: 'vendor',
           chunks: 'all',
         },

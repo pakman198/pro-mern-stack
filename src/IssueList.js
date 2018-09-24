@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 import IssueAdd from './IssueAdd';
 import IssueFilter from './IssueFilter';
 
@@ -18,7 +20,9 @@ const IssueRow = (props) => {
     
   return (
     <tr>
-      <td>{ _id }</td>
+      <td>
+        <Link to={ `/issues/${_id}` }>{_id.substr(-4)}</Link>
+      </td>
       <td>{ status }</td>
       <td>{ owner }</td>
       <td>{ created.toDateString() }</td>
