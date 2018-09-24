@@ -65,9 +65,20 @@ class IssueList extends React.Component {
   componentDidMount() {
     this.loadData();
   }
+
+  componentDidUpdate(prevProps) {
+    const oldQuery = prevProps.location.search;
+    const newQuery = this.props.location.search;
+
+    if (oldQuery === newQuery ) return;
+
+    this.loadData();
+  }
   
   loadData() {
-    fetch('/api/issues')
+    const {location: { search }} = this.props;
+    
+    fetch(`/api/issues${search}`)
     .then(response => {
       if (response.ok) {
         response.json().then(data => {
