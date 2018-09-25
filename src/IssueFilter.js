@@ -1,21 +1,52 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { Link } from 'react-router-dom';
+class IssueFilter extends React.Component {
+  constructor(){
+    super();
+    this.clearFilter = this.clearFilter.bind(this);
+    this.setFilterOpen = this.setFilterOpen.bind(this);
+    this.setFilterAssigned = this.setFilterAssigned.bind(this);
+  }
 
-class IssueFilter extends React.Component { // eslint-disable-inline
+  setFilterOpen(e) {
+    e.preventDefault();
+    const { setFilter } = this.props;
+
+    setFilter("?status=Open" );
+  }
+
+  setFilterAssigned(e) {
+    e.preventDefault();
+    const { setFilter } = this.props;
+    
+    setFilter("?status=Assigned");
+  }
+
+  clearFilter(e) {
+    e.preventDefault();
+    const { setFilter } = this.props;
+    
+    setFilter("");
+  }
+
   render() {
     const Separator = () => <span> | </span>;
 
     return (
       <div>
-        <Link to="/issues">All Issues</Link>
+        <button type="button" onClick={this.clearFilter}>All Issues</button>
         <Separator />
-        <Link to={{ pathname: "/issues", search: "?status=Open" }}>Open Issues</Link>
+        <button type="button" onClick={this.setFilterOpen}>Open Issues</button>
         <Separator />
-        <Link to="/issues?status=Assigned">Assigned Issues</Link>
+        <button type="button" onClick={this.setFilterAssigned}>Assigned Issues</button>
       </div>
     );
   }
+}
+
+IssueFilter.propTypes = {
+  setFilter: PropTypes.func.isRequired
 }
 
 export default IssueFilter;

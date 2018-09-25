@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import IssueAdd from './IssueAdd';
 import IssueFilter from './IssueFilter';
@@ -21,7 +21,7 @@ const IssueRow = (props) => {
   return (
     <tr>
       <td>
-        <Link to={ `/issues/${_id}` }>{_id.substr(-4)}</Link>
+        <Link to={`/issues/${_id}`}>{_id.substr(-4)}</Link>
       </td>
       <td>{ status }</td>
       <td>{ owner }</td>
@@ -31,6 +31,14 @@ const IssueRow = (props) => {
       <td>{ title }</td>
     </tr>
   );
+}
+
+IssueRow.propTypes = {
+  issue: PropTypes.objectOf(PropTypes.object)
+}
+
+IssueRow.defaultProps = {
+  issue: {}
 }
     
 const IssueTable = (props) => {
@@ -54,12 +62,21 @@ const IssueTable = (props) => {
     </table>
   );
 }
+
+IssueTable.propTypes = {
+  issues: PropTypes.arrayOf(PropTypes.object)
+}
+
+IssueTable.defaultProps = {
+  issues: []
+}
         
 class IssueList extends React.Component {
   constructor() {
     super();
     this.state = { issues: [] }
     this.createIssue = this.createIssue.bind(this);
+    this.setFilter = this.setFilter.bind(this);
   }
 
   componentDidMount() {
@@ -67,12 +84,19 @@ class IssueList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { location: { search }} = this.props;
     const oldQuery = prevProps.location.search;
-    const newQuery = this.props.location.search;
+    const newQuery = search;
 
     if (oldQuery === newQuery ) return;
 
     this.loadData();
+  }
+
+  setFilter(query) {
+    const { history: { push }, location: { pathname }} = this.props;
+    push({ pathname, search: query });
+
   }
   
   loadData() {
@@ -84,7 +108,7 @@ class IssueList extends React.Component {
         response.json().then(data => {
           const {records, _metadata: {total_count}} = data;
           
-          console.log(`Total count of records: ${total_count}`);
+          console.log(`Total count of records: ${total_count}`); // eslint-disable-inline
           
           records.forEach((record) => {
             record.created = new Date(record.created);
@@ -131,7 +155,7 @@ class IssueList extends React.Component {
       }
     })
     .catch(err => {
-      console.log(`Error in sending data to the server: ${err.message}`)
+      console.log(`Error in sending data to the server: ${err.message}`) // eslint-disable-inline
     });
   }
   
@@ -140,8 +164,8 @@ class IssueList extends React.Component {
 
     return (
       <div>
-        <h1>TIssue Tracker</h1>
-        <IssueFilter />
+        <h1>Issue Tracker</h1>
+        <IssueFilter setFilter={this.setFilter} />
         <hr />
         <IssueTable issues={issues} />
         <hr />
@@ -149,6 +173,16 @@ class IssueList extends React.Component {
       </div>
     );
   }
+}
+
+IssueList.propTypes = {
+  location: PropTypes.objectOf(PropTypes.object),
+  history: PropTypes.objectOf(PropTypes.object)
+}
+
+IssueList.defaultProps = {
+  location: {},
+  history: {}
 }
   
 export default IssueList;
