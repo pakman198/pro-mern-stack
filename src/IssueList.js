@@ -163,8 +163,7 @@ class IssueList extends React.Component {
     const { issues } = this.state;
 
     return (
-      <div>
-        <h1>Issue Tracker</h1>
+      <div className="issueList">
         <IssueFilter setFilter={this.setFilter} />
         <hr />
         <IssueTable issues={issues} />

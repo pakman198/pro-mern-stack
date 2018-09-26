@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import  bodyParser from 'body-parser';
 import { MongoClient } from 'mongodb';
 import SourceMapSupport from 'source-map-support';
@@ -64,6 +65,10 @@ app.post('/api/issues', (req, res) => {
         console.log(err);
         res.status(500).json({ message: `Invalid request: ${err}` });
     });
+});
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.resolve('static/index.html'));
 });
 
 let db;

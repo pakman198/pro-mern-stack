@@ -1,25 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter as Router, Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import createHistory from "history/createHashHistory";
+import { BrowserRouter as Router, Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import createHistory from "history/createBrowserHistory";
 
 import IssueList from './IssueList';
 import IssueEdit from './IssueEdit';
 
 const customHistory = createHistory();
 
-const RoutedApp = () => (
-  <Router history={customHistory}>
-    <Switch>
-      <Route exact path="/" render={() => <Redirect to="/issues" />} />
-      <Route path="/issues/:id" component={IssueEdit} />
-      <Route exact path="/issues" component={withRouter(IssueList)} />
-    </Switch>
-  </Router>
-);
+const App = () => {
+  return (
+    <Router history={customHistory}>
+      <React.Fragment>
+        <div className="header">
+          <h1>Issue Tracker</h1>
+        </div>
+        <div className="contents">
+          <Switch>
+            <Route path="/issues/:id" component={IssueEdit} />
+            <Route exact path="/issues" component={withRouter(IssueList)} />
+            <Route exact path="/" render={() => <Redirect to="/issues" />} />
+            <Route path="*" render={() => <Redirect to="/issues" />}></Route>
+          </Switch>
+        </div>
+        <div className="footer">
+          <p>
+            Full source code available at this <a href="https://github.com/pakman198">Github repository</a>
+          </p>
+        </div>
+      </React.Fragment>
+    </Router>
+  )
+}
 
 ReactDOM.render(
-  <RoutedApp />,
+  <App />,
   document.getElementById('root')
 );
 
