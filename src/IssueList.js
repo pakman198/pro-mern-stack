@@ -88,7 +88,7 @@ class IssueList extends React.Component {
     const oldQuery = prevProps.location.search;
     const newQuery = search;
 
-    if (oldQuery === newQuery ) return;
+    if (oldQuery === newQuery) return;
 
     this.loadData();
   }
@@ -96,7 +96,6 @@ class IssueList extends React.Component {
   setFilter(query) {
     const { history: { push }, location: { pathname }} = this.props;
     push({ pathname, search: query });
-
   }
   
   loadData() {
@@ -161,10 +160,11 @@ class IssueList extends React.Component {
   
   render() {
     const { issues } = this.state;
+    const { location: { query }} = this.props;
 
     return (
       <div className="issueList">
-        <IssueFilter setFilter={this.setFilter} />
+        <IssueFilter setFilter={this.setFilter} initFilter={query} />
         <hr />
         <IssueTable issues={issues} />
         <hr />
