@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import  bodyParser from 'body-parser';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectID } from 'mongodb';
 import SourceMapSupport from 'source-map-support';
 import Issue from './issue';
 import '@babel/polyfill';
@@ -27,6 +27,39 @@ if(process.env.NODE_ENV !== 'production') {
     app.use(webpackDevMiddleware(bundler, { noInfo: true }));
     app.use(webpackHotMiddleware(bundler, { log: console.log }));
 }
+
+app.get('/api/issues/:id', (req, res) => {
+    let issueId;
+
+    try {
+        issueId = ObjectID(req.params.id);
+    } catch (err) {
+        res.status(422).json({
+            message: `Invalid issue ID format: ${err}`
+        });
+
+        return
+    }
+
+    console.log('ISSUE ID: ', issueId);
+
+    db.collection('issues').find({ "_id": issueId }).limit(1)
+        .next()
+        .then(issue => {
+            console.log({issue})
+            if (!issue) res.status(404).json({
+                message: `No such issue: ${issueId}`
+            });
+
+            res.json(issue);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                message: `Internal Server Error: ${err}`
+            });
+        });
+});
 
 app.get('/api/issues', (req, res) => {
     const filter = {};

@@ -17,7 +17,7 @@ const App = () => {
         </div>
         <div className="contents">
           <Switch>
-            <Route path="/issues/:id" component={IssueEdit} />
+            <Route path="/issues/:id" component={withRouter(IssueEdit)} />
             <Route exact path="/issues" component={withRouter(IssueList)} />
             <Route exact path="/" render={() => <Redirect to="/issues" />} />
             <Route path="*" render={() => <Redirect to="/issues" />}></Route>
