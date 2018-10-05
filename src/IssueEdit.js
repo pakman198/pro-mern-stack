@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import NumInput from './NumInput';
+
 class IssueEdit extends React.Component {
   constructor() {
     super();
@@ -12,7 +14,7 @@ class IssueEdit extends React.Component {
         title: '',
         status: '',
         owner: '',
-        effort: '',
+        effort: null,
         completionDate: '',
         created: ''
       }
@@ -31,10 +33,11 @@ class IssueEdit extends React.Component {
     if (prevProps.match.params.id !== id) this.loadData();
   }
 
-  onChange(e) {
+  onChange(e, convertedValue) {
     const { target: { name, value }} = e;
     const issue = Object.assign({}, this.state.issue);
-    issue[name] = value;
+    const val = convertedValue !== undefined ? convertedValue : value; 
+    issue[name] = val;
 
     this.setState({ issue });
   }
@@ -49,7 +52,6 @@ class IssueEdit extends React.Component {
             issue.created = new Date(issue.created).toDateString();
             issue.completionDate = issue.completionDate !== null ? 
               new Date(issue.completionDate).toDateString() : '';
-            issue.effort = issue.effort != null ? issue.effort.toString() : '';
 
             this.setState({ issue });
           });
@@ -90,7 +92,7 @@ class IssueEdit extends React.Component {
           <input name="owner" value={issue.owner} onChange={this.onChange} />
           <br/>
           Effort:
-          <input size={5} name="effort" value={issue.effort} onChange={this.onChange} />
+          <NumInput size={5} name="effort" value={issue.effort} onChange={this.onChange} />
           <br/>
           Completion Date:
           <input name="completionDate" value={issue.completionDate} onChange={this.onChange} />
