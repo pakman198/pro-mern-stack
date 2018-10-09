@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import NumInput from './NumInput';
+import DateInput from './DateInput';
 
 class IssueEdit extends React.Component {
   constructor() {
@@ -15,12 +16,14 @@ class IssueEdit extends React.Component {
         status: '',
         owner: '',
         effort: null,
-        completionDate: '',
+        completionDate: null,
         created: ''
-      }
+      },
+      invalidFields: {}
     }
 
     this.onChange = this.onChange.bind(this);
+    this.onValidityChange = this.onValidityChange.bind(this);
   }
 
   componentDidMount() {
@@ -42,16 +45,31 @@ class IssueEdit extends React.Component {
     this.setState({ issue });
   }
 
+  onValidityChange(e, valid) {
+    const { invalidFields } = this.state;
+    const { name } = e.target;
+    const invalid_fields = Object.assign({}, invalidFields);
+
+    if(!valid) {
+      invalid_fields[name] = true;
+    } else {
+      delete invalid_fields[name];
+    }
+
+    this.setState({
+      invalidFields: invalid_fields
+    });
+  }
+
   loadData() {
     const { params: { id }} = this.props.match;
     fetch(`/api/issues/${id}`)
       .then(response => {
         if (response.ok) {
           response.json().then(issue => {
-            console.log({issue})
-            issue.created = new Date(issue.created).toDateString();
-            issue.completionDate = issue.completionDate !== null ? 
-              new Date(issue.completionDate).toDateString() : '';
+            issue.created = new Date(issue.created).toUTCString().slice(0, -13);
+            issue.completionDate = issue.completionDate !== undefined 
+              ? new Date(issue.completionDate) : null;
 
             this.setState({ issue });
           });
@@ -65,8 +83,20 @@ class IssueEdit extends React.Component {
       });
   }
 
+  message() {
+    return (
+      <div className="error">
+        Please correct invalid fields before submitting.
+      </div>
+    )
+  }
+
   render() {
-    const { issue } = this.state;
+    const { issue, invalidFields } = this.state;
+    const validationMessage = Object.keys(invalidFields).length === 0 
+      ? null : this.message();
+    const completionDate = issue.completionDate 
+      ? issue.completionDate.toISOString().substr(0, 10) : null;
 
     return (
       <div>
@@ -95,11 +125,16 @@ class IssueEdit extends React.Component {
           <NumInput size={5} name="effort" value={issue.effort} onChange={this.onChange} />
           <br/>
           Completion Date:
-          <input name="completionDate" value={issue.completionDate} onChange={this.onChange} />
+          <DateInput 
+            name="completionDate" 
+            value={completionDate} 
+            onChange={this.onChange}
+            onValidityChange={this.onValidityChange} />
           <br/>
           Title:
           <input name="title" size={50} value={issue.title} onChange={this.onChange} />
           <br/>
+          {validationMessage}
           <button type="submit">Submit</button>
         </form>
         <br/>

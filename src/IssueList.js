@@ -25,9 +25,9 @@ const IssueRow = (props) => {
       </td>
       <td>{ status }</td>
       <td>{ owner }</td>
-      <td>{ created.toDateString() }</td>
+      <td>{ created.toUTCString().slice(0, -13) }</td>
       <td>{ effort }</td>
-      <td>{ completionDate ? completionDate.toDateString() : '' }</td>
+      <td>{ completionDate ? completionDate.toUTCString().slice(0, -13) : '' }</td>
       <td>{ title }</td>
     </tr>
   );
