@@ -17,13 +17,14 @@ class IssueEdit extends React.Component {
         owner: '',
         effort: null,
         completionDate: null,
-        created: ''
+        created: null
       },
       invalidFields: {}
     }
 
     this.onChange = this.onChange.bind(this);
     this.onValidityChange = this.onValidityChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -68,7 +69,7 @@ class IssueEdit extends React.Component {
         if (response.ok) {
           response.json().then(issue => {
             issue.created = new Date(issue.created).toUTCString().slice(0, -13);
-            issue.completionDate = issue.completionDate !== undefined 
+            issue.completionDate = issue.completionDate !== undefined && issue.completionDate !== null
               ? new Date(issue.completionDate) : null;
 
             this.setState({ issue });
@@ -81,6 +82,49 @@ class IssueEdit extends React.Component {
       }).catch(err => {
         alert(`Error in fetching data from server: ${err.message}`);
       });
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const { invalidFields, issue } = this.state;
+    const { params: { id }} = this.props.match;
+
+    if( Object.keys(invalidFields).length !== 0) {
+      return;
+    }
+
+    fetch(`/api/issues/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify(issue)
+    })
+    .then(response => {
+      if(response.ok) {
+        response.json().then(updatedIssue => {
+          updatedIssue.created = new Date(updatedIssue.created).toUTCString().slice(0, -13);
+          
+          if(updatedIssue.completionDate) {
+            updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+          }
+
+          console.log({updatedIssue});
+
+          this.setState({
+            issue: updatedIssue
+          });
+
+          alert('Updated issue successfully.');
+        });
+      } else {
+        response.json().then(err => {
+          alert(`Failed to updated issue: ${err.message}`);
+        });
+      }
+    })
+    .catch(err => {
+      alert(`Error in sending data to the server: ${err.message}`);
+    });
   }
 
   message() {
@@ -100,7 +144,7 @@ class IssueEdit extends React.Component {
 
     return (
       <div>
-        <form>
+        <form onSubmit={this.onSubmit}>
           ID: { issue._id }
           <br/>
           Created: { issue.created }
