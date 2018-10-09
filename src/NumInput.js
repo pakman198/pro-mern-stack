@@ -32,7 +32,7 @@ class NumInput extends React.Component {
   }
 
   format(num) {
-    return num !== null ? num.toString() : '';
+    return num !== null && num !== undefined ? num.toString() : '';
   }
 
   unformat(num) {
