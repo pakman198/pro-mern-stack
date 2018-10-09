@@ -15,7 +15,8 @@ class DateInput extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if(newProps.value !== this.props.value) {
+    const { value } = this.props;
+    if(newProps.value !== value) {
       this.setState({
         value: this.editFormat(newProps.value)
       });
@@ -73,9 +74,9 @@ class DateInput extends React.Component {
 
   render() {
     const { valid, focused, value } = this.state;
-    const { name } = this.props;
+    const { name, value: props_val } = this.props;
     const className = !valid && !focused ? 'invalid' : null;
-    const val = focused || !valid ? value : this.displayFormat(this.props.value);
+    const val = focused || !valid ? value : this.displayFormat(props_val);
 
     return (
       <input
@@ -84,19 +85,24 @@ class DateInput extends React.Component {
         name={name}
         className={className}
         value={val}
-        placeholder={ focused ? "yyyy-mm-dd" : null }
+        placeholder={focused ? "yyyy-mm-dd" : null}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
-        onChange={this.onChange} />
+        onChange={this.onChange}
+      />
     );
   }
 }
 
 DateInput.propTypes = {
-  value: PropTypes.object,
+  value: PropTypes.objectOf(PropTypes.object),
   onChange: PropTypes.func.isRequired,
-  onValidityChange: PropTypes.func,
+  onValidityChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired
+}
+
+DateInput.defaultProps = {
+  value: {}
 }
 
 export default DateInput;

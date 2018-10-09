@@ -49,7 +49,8 @@ class NumInput extends React.Component {
         {...this.props}
         value={value}
         onBlur={this.onBlur}
-        onChange={this.onChange} />
+        onChange={this.onChange} 
+      />
     );
   }
 }
@@ -57,6 +58,10 @@ class NumInput extends React.Component {
 NumInput.propTypes = {
   value: PropTypes.number,
   onChange: PropTypes.func.isRequired
+}
+
+NumInput.defaultProps = {
+  value: ''
 }
 
 export default NumInput;

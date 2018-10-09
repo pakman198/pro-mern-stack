@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 import IssueAdd from './IssueAdd';
 import IssueFilter from './IssueFilter';
-import { defaultCipherList } from 'constants';
 
 const IssueRow = (props) => {
   function onDeleteClick() {
@@ -35,7 +34,7 @@ const IssueRow = (props) => {
       <td>{ effort }</td>
       <td>{ completionDate ? completionDate.toUTCString().slice(0, -13) : '' }</td>
       <td>{ title }</td>
-      <td><button onClick={onDeleteClick}>Delete</button></td>
+      <td><button type="button" onClick={onDeleteClick}>Delete</button></td>
     </tr>
   );
 }
@@ -43,10 +42,6 @@ const IssueRow = (props) => {
 IssueRow.propTypes = {
   issue: PropTypes.objectOf(PropTypes.object).isRequired,
   deleteIssue: PropTypes.func.isRequired
-}
-
-IssueRow.defaultProps = {
-  issue: {}
 }
     
 const IssueTable = (props) => {
@@ -184,11 +179,13 @@ class IssueList extends React.Component {
   
   render() {
     const { issues } = this.state;
-    const { location: { query }} = this.props;
+    const { location, location: { search }} = this.props;
+
+    console.log({location})
 
     return (
       <div className="issueList">
-        <IssueFilter setFilter={this.setFilter} initFilter={query} />
+        <IssueFilter setFilter={this.setFilter} initFilter={search} />
         <hr />
         <IssueTable issues={issues} deleteIssue={this.deleteIssue} />
         <hr />

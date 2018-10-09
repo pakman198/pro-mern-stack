@@ -64,17 +64,18 @@ class IssueFilter extends React.Component {
   applyFilter() {
     const newFilter = {};
     const { status, effort_gte, effort_lte } = this.state;
+    const { setFilter } = this.props;
 
     if (status) newFilter.status = status;
     if (effort_gte) newFilter.effort_gte = effort_gte;
     if (effort_lte) newFilter.effort_lte = effort_lte;
 
-    let filter = ""
-    Object.keys(newFilter).map( (key, index) => {
+    let filter = "";
+    Object.keys(newFilter).map( key => {
       filter += `${key}=${newFilter[key]}&`
     });
 
-    this.props.setFilter(filter.slice(0, -1));
+    setFilter(filter.slice(0, -1));
   }
 
   resetFilter() {
@@ -89,7 +90,9 @@ class IssueFilter extends React.Component {
   }
 
   clearFilter() {
-    this.props.setFilter("")
+    const { setFilter } = this.props;
+    
+    setFilter("");
   }
 
   renderSelect() {
@@ -112,7 +115,8 @@ class IssueFilter extends React.Component {
     const status = this.renderSelect();
     return (
       <div>
-        Status: { status }
+        Status:
+        { status }
         Effort between: 
         <input size={5} value={effort_gte} onChange={this.handleEffortGteChange} />
         -
@@ -128,10 +132,6 @@ class IssueFilter extends React.Component {
 IssueFilter.propTypes = {
   initFilter: PropTypes.objectOf(PropTypes.object).isRequired,
   setFilter: PropTypes.func.isRequired
-}
-
-IssueFilter.defaultProps = {
-  initFilter: {}
 }
 
 export default IssueFilter;

@@ -20,12 +20,13 @@ const App = () => {
             <Route path="/issues/:id" component={withRouter(IssueEdit)} />
             <Route exact path="/issues" component={withRouter(IssueList)} />
             <Route exact path="/" render={() => <Redirect to="/issues" />} />
-            <Route path="*" render={() => <Redirect to="/issues" />}></Route>
+            <Route path="*" render={() => <Redirect to="/issues" />} />
           </Switch>
         </div>
         <div className="footer">
           <p>
-            Full source code available at this <a href="https://github.com/pakman198">Github repository</a>
+            Full source code available at this 
+            <a href="https://github.com/pakman198">Github repository</a>
           </p>
         </div>
       </React.Fragment>
