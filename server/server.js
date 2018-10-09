@@ -41,12 +41,9 @@ app.get('/api/issues/:id', (req, res) => {
         return
     }
 
-    console.log('ISSUE ID: ', issueId);
-
-    db.collection('issues').find({ "_id": issueId }).limit(1)
+    db.collection('issues').find({ _id: issueId }).limit(1)
         .next()
         .then(issue => {
-            console.log({issue})
             if (!issue) res.status(404).json({
                 message: `No such issue: ${issueId}`
             });
@@ -100,6 +97,39 @@ app.post('/api/issues', (req, res) => {
     }).catch(err => {
         console.log(err);
         res.status(500).json({ message: `Invalid request: ${err}` });
+    });
+});
+
+app.put('/api/issues/:id', (req, res) => {
+    let issueId;
+
+    console.log(req.body)
+
+    try {
+        issueId = new ObjectID(req.params.id);
+    }catch(err) {
+        res.status(422).json({message: `Invalid issue ID format: ${err}`});
+        return;
+    }
+
+    const issue = req.body;
+    delete issue._id;
+    
+
+    const err = Issue.validateIssue(issue);
+    if(err) {
+        res.status(422).json({ message: `Invalid request: ${err}`});
+        return;
+    }
+
+    db.collection('issues').update({ _id: issueId}, Issue.convertIssue(issue))
+    .then(() => db.collection('issues').find({ _id: issueId}).limit(1).next())
+    .then( savedIssue => {
+        res.json(savedIssue);
+    })
+    .catch(err => {
+        console.log({err});
+        res.status(500).json({ message: `Internal Server Error: ${err}` });
     });
 });
 
