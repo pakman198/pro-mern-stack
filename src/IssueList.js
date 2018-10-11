@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Button, Glyphicon } from 'react-bootstrap';
 
 import IssueAdd from './IssueAdd';
 import IssueFilter from './IssueFilter';
@@ -34,7 +35,11 @@ const IssueRow = (props) => {
       <td>{ effort }</td>
       <td>{ completionDate ? completionDate.toUTCString().slice(0, -13) : '' }</td>
       <td>{ title }</td>
-      <td><button type="button" onClick={onDeleteClick}>Delete</button></td>
+      <td>
+        <Button bsSize="xsmall" onClick={onDeleteClick}>
+          <Glyphicon glyph="trash" />
+        </Button>
+      </td>
     </tr>
   );
 }
