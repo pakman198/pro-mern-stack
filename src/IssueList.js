@@ -45,7 +45,7 @@ const IssueRow = (props) => {
 }
 
 IssueRow.propTypes = {
-  issue: PropTypes.objectOf(PropTypes.object).isRequired,
+  issue: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   deleteIssue: PropTypes.func.isRequired
 }
     
@@ -201,8 +201,8 @@ class IssueList extends React.Component {
 }
 
 IssueList.propTypes = {
-  location: PropTypes.objectOf(PropTypes.object),
-  history: PropTypes.objectOf(PropTypes.object)
+  location: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  history: PropTypes.object // eslint-disable-line react/forbid-prop-types
 }
 
 IssueList.defaultProps = {

@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  mode: 'development',
   entry: {
     // the key will be the file name.
     // if entry is a string instead of an object, the name by default is main
@@ -14,7 +15,7 @@ module.exports = {
     splitChunks: {
       cacheGroups: {
         vendor: {
-          test: /[\\/]node_modules[\\/](react|react-dom|whatwg-fetch|react-router-dom)[\\/]/,
+          test: /[\\/]node_modules[\\/](react|react-dom|prop-types|whatwg-fetch|react-router-dom|react-bootstrap|react-router-bootstrap)[\\/]/,
           name: 'vendor',
           chunks: 'all',
         },

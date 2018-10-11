@@ -130,7 +130,9 @@ class IssueFilter extends React.Component {
 }
 
 IssueFilter.propTypes = {
-  initFilter: PropTypes.objectOf(PropTypes.object).isRequired,
+  initFilter: PropTypes.oneOfType([
+    PropTypes.object, 
+    PropTypes.string]).isRequired, // eslint-disable-line react/forbid-prop-types
   setFilter: PropTypes.func.isRequired
 }
 

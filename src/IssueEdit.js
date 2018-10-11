@@ -194,7 +194,7 @@ class IssueEdit extends React.Component {
 }
 
 IssueEdit.propTypes = {
-  match: PropTypes.objectOf(PropTypes.object)
+  match: PropTypes.object // eslint-disable-line react/forbid-prop-types
 }
 
 IssueEdit.defaultProps = {
