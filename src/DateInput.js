@@ -75,15 +75,14 @@ class DateInput extends React.Component {
   render() {
     const { valid, focused, value } = this.state;
     const { name, value: props_val } = this.props;
-    const className = !valid && !focused ? 'invalid' : null;
     const val = focused || !valid ? value : this.displayFormat(props_val);
+    const childProps = Object.assign({}, this.props);
+    delete childProps.onValidityChange;
 
     return (
       <input
         type="text"
-        size={20}
-        name={name}
-        className={className}
+        {...childProps}
         value={val}
         placeholder={focused ? "yyyy-mm-dd" : null}
         onFocus={this.onFocus}
@@ -95,7 +94,7 @@ class DateInput extends React.Component {
 }
 
 DateInput.propTypes = {
-  value: PropTypes.objectOf(PropTypes.object),
+  value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onValidityChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired
