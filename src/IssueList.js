@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
 
 import IssueAdd from './IssueAdd';
 import IssueFilter from './IssueFilter';
@@ -56,7 +56,7 @@ const IssueTable = (props) => {
   );
   
   return (
-    <table className="bordered-table">
+    <Table bordered condensed hover responsive>
       <thead>
         <tr>
           <th>Id</th>
@@ -70,7 +70,7 @@ const IssueTable = (props) => {
         </tr>
       </thead>
       <tbody>{ issueRows }</tbody>
-    </table>
+    </Table>
   );
 }
 
@@ -190,7 +190,16 @@ class IssueList extends React.Component {
 
     return (
       <div className="issueList">
-        <IssueFilter setFilter={this.setFilter} initFilter={search} />
+        <Panel>
+          <Panel.Heading>
+            <Panel.Title toggle>Filter</Panel.Title>
+          </Panel.Heading>
+          <Panel.Collapse>
+            <Panel.Body>
+              <IssueFilter setFilter={this.setFilter} initFilter={search} />
+            </Panel.Body>
+          </Panel.Collapse>
+        </Panel>
         <hr />
         <IssueTable issues={issues} deleteIssue={this.deleteIssue} />
         <hr />

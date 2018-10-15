@@ -26,7 +26,7 @@ const Header = () => (
     <Nav pullRight>
       <NavItem>
         <Glyphicon glyph="plus" />
-        Create Issue
+        &nbsp;Create Issue
       </NavItem>
       <NavDropdown 
         id="user-dropdown"
