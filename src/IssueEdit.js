@@ -15,6 +15,7 @@ import {
 
 import NumInput from './NumInput';
 import DateInput from './DateInput';
+import Toast from './Toast';
 
 class IssueEdit extends React.Component {
   constructor() {
@@ -31,7 +32,10 @@ class IssueEdit extends React.Component {
         created: null
       },
       invalidFields: {},
-      isValidationVisible: false
+      isValidationVisible: false,
+      isToastVisible: false,
+      toastMessage: '',
+      toastType: 'success'
     }
 
     this.onChange = this.onChange.bind(this);
@@ -39,6 +43,9 @@ class IssueEdit extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.dismissValidation = this.dismissValidation.bind(this);
     this.showValidation = this.showValidation.bind(this);
+    this.showSuccess = this.showSuccess.bind(this);
+    this.showError = this.showError.bind(this);
+    this.dismissToast = this.dismissToast.bind(this);
   }
 
   componentDidMount() {
@@ -53,7 +60,7 @@ class IssueEdit extends React.Component {
 
   onChange(e, convertedValue) {
     const { target: { name, value }} = e;
-    const { state_issue } = this.state;
+    const { issue:  state_issue } = this.state;
     const issue = Object.assign({}, state_issue);
     const val = convertedValue !== undefined ? convertedValue : value; 
     issue[name] = val;
@@ -80,13 +87,15 @@ class IssueEdit extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
-    this.showValidation();
 
     const { invalidFields, issue } = this.state;
     const { match: {params: { id }}} = this.props;
 
     if( Object.keys(invalidFields).length !== 0) {
+      this.showValidation();
       return;
+    } else {
+      this.dismissValidation();
     }
 
     fetch(`/api/issues/${id}`, {
@@ -109,16 +118,16 @@ class IssueEdit extends React.Component {
             issue: updatedIssue
           });
 
-          alert('Updated issue successfully.');
+          this.showSuccess('Updated issue successfully.');
         });
       } else {
         response.json().then(err => {
-          alert(`Failed to updated issue: ${err.message}`);
+          this.showError(`Failed to updated issue: ${err.message}`);
         });
       }
     })
     .catch(err => {
-      alert(`Error in sending data to the server: ${err.message}`);
+      this.showError(`Error in sending data to the server: ${err.message}`);
     });
   }
 
@@ -136,11 +145,11 @@ class IssueEdit extends React.Component {
           });
         } else {
           response.json().then(err => {
-            alert(`Failed to fetch issue: ${err.message}`)
+            this.showError(`Failed to fetch issue: ${err.message}`)
           });
         }
       }).catch(err => {
-        alert(`Error in fetching data from server: ${err.message}`);
+        this.showError(`Error in fetching data from server: ${err.message}`);
       });
   }
 
@@ -155,6 +164,28 @@ class IssueEdit extends React.Component {
       isValidationVisible: false
     });
   }
+  
+  showSuccess(message) {
+    this.setState({
+      isToastVisible: true,
+      toastMessage: message,
+      toastType: 'success'
+    });
+  }
+
+  showError(message) {
+    this.setState({
+      isToastVisible: true,
+      toastMessage: message,
+      toastType: 'danger'
+    });
+  }
+
+  dismissToast() {
+    this.setState({ 
+      isToastVisible: false 
+    });
+  }
 
   message() {
     return (
@@ -165,8 +196,16 @@ class IssueEdit extends React.Component {
   }
 
   render() {
-    const { issue, invalidFields, isValidationVisible } = this.state;
-    const validationMessage = !isValidationVisible ? null : this.message();
+    const { 
+      issue,
+      invalidFields,
+      isValidationVisible,
+      isToastVisible,
+      toastMessage,
+      toastType 
+    } = this.state;
+    const validationMessage = Object.keys(invalidFields).length === 0
+      && !isValidationVisible ? null : this.message();
     const completionDate = issue.completionDate 
       ? issue.completionDate.toISOString().substr(0, 10) : null;
 
@@ -267,6 +306,12 @@ class IssueEdit extends React.Component {
               </Col>
             </FormGroup>
           </Form>
+          <Toast
+            showing={isToastVisible}
+            message={toastMessage}
+            onDismiss={this.dismissToast}
+            bsStyle={toastType}
+          />
         </Panel.Body>
       </Panel>
     );

@@ -112,7 +112,6 @@ app.put('/api/issues/:id', (req, res) => {
 
     const issue = req.body;
     delete issue._id;
-    
 
     const err = Issue.validateIssue(issue);
     if(err) {

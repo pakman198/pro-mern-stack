@@ -5,6 +5,7 @@ import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
 
 import IssueAdd from './IssueAdd';
 import IssueFilter from './IssueFilter';
+import Toast from './Toast';
 
 const IssueRow = (props) => {
   function onDeleteClick() {
@@ -86,10 +87,17 @@ IssueTable.defaultProps = {
 class IssueList extends React.Component {
   constructor() {
     super();
-    this.state = { issues: [] }
+    this.state = {
+      issues: [],
+      isToastVisbile: false,
+      toastMessage: '',
+      toastType: 'success'
+    }
     this.createIssue = this.createIssue.bind(this);
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
+    this.showError = this.showError.bind(this);
+    this.dismissToast = this.dismissToast.bind(this);
   }
 
   componentDidMount() {
@@ -133,12 +141,12 @@ class IssueList extends React.Component {
         });
       } else {
         response.json().then(err => {
-          alert('Failed to fetch issues: ' + err.message);
+          this.showError('Failed to fetch issues: ' + err.message);
         });
       }
     })
     .catch(err => {
-      alert('Error in fetching data from server:', err);
+      this.showError('Error in fetching data from server:', err);
     });
   }
 
@@ -162,12 +170,12 @@ class IssueList extends React.Component {
         
       } else {
         response.json().then(err => {
-          alert(`Failed to add issue: ${err.message}`);
+          this.showError(`Failed to add issue: ${err.message}`);
         });
       }
     })
     .catch(err => {
-      console.log(`Error in sending data to the server: ${err.message}`) // eslint-disable-inline
+      this.showError(`Error in sending data to the server: ${err.message}`) // eslint-disable-inline
     });
   }
 
@@ -181,9 +189,23 @@ class IssueList extends React.Component {
       }
     });
   }
+
+  showError(message) {
+    this.setState({
+      isToastVisbile: true,
+      toastMessage: message,
+      toastType: 'danger'
+    });
+  }
+
+  dismissToast() {
+    this.setState({
+      isToastVisbile: false
+    })
+  }
   
   render() {
-    const { issues } = this.state;
+    const { issues, isToastVisbile, toastMessage, toastType } = this.state;
     const { location, location: { search }} = this.props;
 
     console.log({location})
@@ -204,6 +226,12 @@ class IssueList extends React.Component {
         <IssueTable issues={issues} deleteIssue={this.deleteIssue} />
         <hr />
         <IssueAdd createIssue={this.createIssue} />
+        <Toast 
+          showing={isToastVisbile}
+          message={toastMessage}
+          onDismiss={this.dismissToast}
+          bsStyle={toastType} 
+        />
       </div>
     );
   }
