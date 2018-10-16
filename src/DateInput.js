@@ -74,7 +74,7 @@ class DateInput extends React.Component {
 
   render() {
     const { valid, focused, value } = this.state;
-    const { name, value: props_val } = this.props;
+    const { value: props_val } = this.props;
     const val = focused || !valid ? value : this.displayFormat(props_val);
     const childProps = Object.assign({}, this.props);
     delete childProps.onValidityChange;

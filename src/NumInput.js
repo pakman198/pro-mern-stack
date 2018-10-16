@@ -60,8 +60,4 @@ NumInput.propTypes = {
   onChange: PropTypes.func.isRequired
 }
 
-NumInput.defaultProps = {
-  value: ''
-}
-
 export default NumInput;

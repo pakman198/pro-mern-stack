@@ -9,7 +9,8 @@ import {
   Button,
   Panel,
   Form,
-  Col
+  Col,
+  Alert
 } from 'react-bootstrap';
 
 import NumInput from './NumInput';
@@ -29,12 +30,15 @@ class IssueEdit extends React.Component {
         completionDate: null,
         created: null
       },
-      invalidFields: {}
+      invalidFields: {},
+      isValidationVisible: false
     }
 
     this.onChange = this.onChange.bind(this);
     this.onValidityChange = this.onValidityChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.dismissValidation = this.dismissValidation.bind(this);
+    this.showValidation = this.showValidation.bind(this);
   }
 
   componentDidMount() {
@@ -66,6 +70,7 @@ class IssueEdit extends React.Component {
       invalid_fields[name] = true;
     } else {
       delete invalid_fields[name];
+      this.dismissValidation();
     }
 
     this.setState({
@@ -75,6 +80,7 @@ class IssueEdit extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
+    this.showValidation();
 
     const { invalidFields, issue } = this.state;
     const { match: {params: { id }}} = this.props;
@@ -138,18 +144,29 @@ class IssueEdit extends React.Component {
       });
   }
 
+  showValidation() {
+    this.setState({
+      isValidationVisible: true
+    });
+  }
+
+  dismissValidation() {
+    this.setState({
+      isValidationVisible: false
+    });
+  }
+
   message() {
     return (
-      <div className="error">
+      <Alert bsStyle="danger" onDismiss={this.dismissValidation}>
         Please correct invalid fields before submitting.
-      </div>
+      </Alert>
     )
   }
 
   render() {
-    const { issue, invalidFields } = this.state;
-    const validationMessage = Object.keys(invalidFields).length === 0 
-      ? null : this.message();
+    const { issue, invalidFields, isValidationVisible } = this.state;
+    const validationMessage = !isValidationVisible ? null : this.message();
     const completionDate = issue.completionDate 
       ? issue.completionDate.toISOString().substr(0, 10) : null;
 
@@ -207,7 +224,8 @@ class IssueEdit extends React.Component {
                   componentClass={NumInput}
                   name="effort"
                   value={issue.effort}
-                  onChange={this.onChange} />
+                  onChange={this.onChange}
+                />
               </Col>
             </FormGroup>
 
@@ -219,7 +237,8 @@ class IssueEdit extends React.Component {
                   name="completionDate"
                   value={completionDate} 
                   onChange={this.onChange}
-                  onValidityChange={this.onValidityChange} />
+                  onValidityChange={this.onValidityChange}
+                />
                 <FormControl.Feedback />
               </Col>
             </FormGroup>
@@ -241,8 +260,13 @@ class IssueEdit extends React.Component {
                 </ButtonToolbar>
               </Col>
             </FormGroup>
+
+            <FormGroup>
+              <Col smOffset={3} sm={9}>
+                { validationMessage }
+              </Col>
+            </FormGroup>
           </Form>
-          { validationMessage }
         </Panel.Body>
       </Panel>
     );
