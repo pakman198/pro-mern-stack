@@ -285,7 +285,7 @@ class IssueEdit extends React.Component {
             <FormGroup>
               <Col componentClass={ControlLabel} sm={3}>Title</Col>
               <Col sm={9}>
-                <FormControl name="owner" value={issue.title} onChange={this.onChange} />
+                <FormControl name="title" value={issue.title} onChange={this.onChange} />
               </Col>
             </FormGroup>            
 

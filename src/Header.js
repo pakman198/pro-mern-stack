@@ -9,6 +9,8 @@ import {
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
+import IssueAddNavItem from './IssueAddNavItem';
+
 const Header = () => (
   <Navbar fluid>
     <Navbar.Header>
@@ -24,10 +26,7 @@ const Header = () => (
     </Nav>
     
     <Nav pullRight>
-      <NavItem>
-        <Glyphicon glyph="plus" />
-        &nbsp;Create Issue
-      </NavItem>
+      <IssueAddNavItem />
       <NavDropdown 
         id="user-dropdown"
         title={<Glyphicon glyph="option-horizontal" />}

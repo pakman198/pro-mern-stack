@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
 
-import IssueAdd from './IssueAdd';
 import IssueFilter from './IssueFilter';
 import Toast from './Toast';
 
@@ -93,7 +92,6 @@ class IssueList extends React.Component {
       toastMessage: '',
       toastType: 'success'
     }
-    this.createIssue = this.createIssue.bind(this);
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
     this.showError = this.showError.bind(this);
@@ -150,35 +148,6 @@ class IssueList extends React.Component {
     });
   }
 
-  createIssue(newIssue) {
-    fetch('/api/issues', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newIssue)
-      
-    }).then( response => {
-      if(response.ok){
-        response.json().then(updatedIssue => {
-          updatedIssue.created = new Date(updatedIssue.created);
-          if(updatedIssue.completionDate) {
-            updatedIssue.completionDate = new Date(updatedIssue.completionDate);
-          }
-          const { issues } = this.state;
-          const newIssues = issues.concat(updatedIssue);
-          this.setState({ issues: newIssues });
-        })
-        
-      } else {
-        response.json().then(err => {
-          this.showError(`Failed to add issue: ${err.message}`);
-        });
-      }
-    })
-    .catch(err => {
-      this.showError(`Error in sending data to the server: ${err.message}`) // eslint-disable-inline
-    });
-  }
-
   deleteIssue(id) {
     fetch(`/api/issues/${id}`, { method: 'DELETE'})
     .then(response => {
@@ -208,7 +177,7 @@ class IssueList extends React.Component {
     const { issues, isToastVisbile, toastMessage, toastType } = this.state;
     const { location, location: { search }} = this.props;
 
-    console.log({location})
+    // console.log({location})
 
     return (
       <div className="issueList">
@@ -224,8 +193,6 @@ class IssueList extends React.Component {
         </Panel>
         <hr />
         <IssueTable issues={issues} deleteIssue={this.deleteIssue} />
-        <hr />
-        <IssueAdd createIssue={this.createIssue} />
         <Toast 
           showing={isToastVisbile}
           message={toastMessage}
