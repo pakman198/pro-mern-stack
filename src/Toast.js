@@ -37,11 +37,12 @@ Toast.propTypes = {
   showing: PropTypes.bool.isRequired,
   onDismiss: PropTypes.func.isRequired,
   bsStyle: PropTypes.string,
-  message: PropTypes.any
+  message: PropTypes.any // eslint-disable-line react/forbid-prop-types
 }
 
 Toast.defaultProps = {
-  bsStyle: 'success'
+  bsStyle: 'success',
+  message: ''
 }
 
 export default Toast;

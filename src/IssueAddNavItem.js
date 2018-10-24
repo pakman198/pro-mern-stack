@@ -61,7 +61,7 @@ class IssueAddNavItem extends React.Component {
   submit(e) {
     e.preventDefault();
     this.hideModal();
-    const { issueAdd: { owner, title }} = document.forms;
+    const { issueAdd: { owner, title }} = document.forms;
     const newIssue = {
       owner: owner.value,
       title: title.value,
@@ -94,7 +94,8 @@ class IssueAddNavItem extends React.Component {
     return (
       <React.Fragment>
         <NavItem onClick={this.showModal}>
-          <Glyphicon glyph="plus" /> Create Issue
+          <Glyphicon glyph="plus" /> 
+          &nbsp;Create Issue
         </NavItem>
         <Modal keyboard show={showing} onHide={this.hideModal}>
           <Modal.Header closeButton>
@@ -108,7 +109,7 @@ class IssueAddNavItem extends React.Component {
               </FormGroup>
               <FormGroup>
                 <ControlLabel>Owner</ControlLabel>
-                <FormControl type ="text" name="owner" />
+                <FormControl type="text" name="owner" />
               </FormGroup>
             </Form>
           </Modal.Body>
@@ -131,7 +132,11 @@ class IssueAddNavItem extends React.Component {
 }
 
 IssueAddNavItem.propTypes = {
-  router: PropTypes.object // eslint-disable-line react/forbid-prop-types
+  history: PropTypes.object // eslint-disable-line react/forbid-prop-types
+}
+
+IssueAddNavItem.defaultProps = {
+  history: {}
 }
 
 export default withRouter(IssueAddNavItem);

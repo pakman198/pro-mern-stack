@@ -175,9 +175,7 @@ class IssueList extends React.Component {
   
   render() {
     const { issues, isToastVisbile, toastMessage, toastType } = this.state;
-    const { location, location: { search }} = this.props;
-
-    // console.log({location})
+    const { location: { search }} = this.props;
 
     return (
       <div className="issueList">

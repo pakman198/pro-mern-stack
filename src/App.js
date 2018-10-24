@@ -6,6 +6,7 @@ import createHistory from "history/createBrowserHistory";
 import Header from './Header';
 import IssueList from './IssueList';
 import IssueEdit from './IssueEdit';
+import IssueReport from './IssueReport';
 
 const customHistory = createHistory();
 
@@ -16,6 +17,7 @@ const App = () => {
         <Header />
         <div className="container-fluid">
           <Switch>
+            <Route path="/reports" component={withRouter(IssueReport)} />
             <Route path="/issues/:id" component={withRouter(IssueEdit)} />
             <Route exact path="/issues" component={withRouter(IssueList)} />
             <Route exact path="/" render={() => <Redirect to="/issues" />} />
