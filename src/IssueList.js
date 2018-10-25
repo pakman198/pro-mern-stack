@@ -2,9 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
+import Pagination from "react-js-pagination";
+import qs from 'querystringify';
 
 import IssueFilter from './IssueFilter';
 import Toast from './Toast';
+
+const PAGE_SIZE = 10;
 
 const IssueRow = (props) => {
   function onDeleteClick() {
@@ -84,18 +88,50 @@ IssueTable.defaultProps = {
 }
         
 class IssueList extends React.Component {
+  static dataFetcher(location) {
+    const query = qs.parse(location.search);
+    const pageStr = query._page;
+    if(pageStr) {
+      delete query._page;
+      query._offset = (parseInt(pageStr, 10) - 1) * PAGE_SIZE;
+    }
+    query._limit = PAGE_SIZE;
+    const search = qs.stringify(query);
+    
+    return fetch(`/api/issues?${search}`).then(response => {
+      if(!response.ok) {
+        return response.json().then(err => Promise.reject(err));
+      } 
+
+      return response.json().then(data => ({ IssueList: data }));
+    })
+  }
+
   constructor() {
     super();
+    const data = {
+      metadata: { totalCount: 0 },
+      records: []
+    }
+    const issues = data.records;
+    issues.forEach(issue => {
+      issue.created = new Date(issue.created);
+      if (issue.completionDate) {
+        issue.completionDate = new Date(issue.completionDate);
+      }
+    });
     this.state = {
-      issues: [],
+      issues,
       isToastVisbile: false,
       toastMessage: '',
-      toastType: 'success'
+      toastType: 'success',
+      totalCount: data.metadata.totalCount,
     }
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
     this.showError = this.showError.bind(this);
     this.dismissToast = this.dismissToast.bind(this);
+    this.selectPage = this.selectPage.bind(this);
   }
 
   componentDidMount() {
@@ -113,38 +149,39 @@ class IssueList extends React.Component {
   }
 
   setFilter(query) {
-    const { history: { push }, location: { pathname }} = this.props;
-    push({ pathname, search: query });
+    const { history } = this.props;
+
+    history.push(`/issues/?${query}`);
+  }
+
+  selectPage(page) {
+    const { history, location} = this.props;
+    const search = qs.parse(location.search);
+    Object.assign(search, { _page: page })
+    const query = qs.stringify(search);
+    
+    history.push(`/issues/?${query}`);
   }
   
   loadData() {
-    const {location: { search }} = this.props;
-    
-    fetch(`/api/issues${search}`)
-    .then(response => {
-      if (response.ok) {
-        response.json().then(data => {
-          const {records, _metadata: {total_count}} = data;
-          
-          console.log(`Total count of records: ${total_count}`); // eslint-disable-inline
-          
-          records.forEach((record) => {
-            record.created = new Date(record.created);
-            if (record.completionDate) {
-              record.completionDate = new Date(record.completionDate);
-            }
-          });
-          
-          this.setState({ issues: records });
-        });
-      } else {
-        response.json().then(err => {
-          this.showError('Failed to fetch issues: ' + err.message);
-        });
-      }
-    })
-    .catch(err => {
-      this.showError('Error in fetching data from server:', err);
+    const {location, location: { search }} = this.props;
+
+    IssueList.dataFetcher(location)
+    .then(data => {
+      const { metadata: { totalCount }} = data.IssueList;
+      const issues = data.IssueList.records;
+
+      issues.forEach(issue => {
+        issue.created = new Date(issue.created);
+        if (issue.completionDate) {
+          issue.completionDate = new Date(issue.completionDate);
+        }
+      });
+
+      this.setState({ issues, totalCount });
+
+    }).catch(err => {
+      this.showError('Error in fetching data from server:' + err);
     });
   }
 
@@ -172,10 +209,30 @@ class IssueList extends React.Component {
       isToastVisbile: false
     })
   }
+
+  renderPagination() {
+    const { totalCount } = this.state;
+    const { location: { search }} = this.props;
+    const query = qs.parse(search);
+    const items = Math.ceil(totalCount / PAGE_SIZE);
+    const activePage = parseInt(query._page || '1', 10);
+
+    return (
+      <Pagination
+        activePage={activePage}
+        totalItemsCount={totalCount}
+        pageRangeDisplayed={10}
+        onChange={this.selectPage}
+      />
+    )
+    
+  }
   
   render() {
     const { issues, isToastVisbile, toastMessage, toastType } = this.state;
     const { location: { search }} = this.props;
+    const query = qs.parse(search);
+    const pagination = this.renderPagination();
 
     return (
       <div className="issueList">
@@ -185,10 +242,13 @@ class IssueList extends React.Component {
           </Panel.Heading>
           <Panel.Collapse>
             <Panel.Body>
-              <IssueFilter setFilter={this.setFilter} initFilter={search} />
+              <IssueFilter setFilter={this.setFilter} initFilter={query} />
             </Panel.Body>
           </Panel.Collapse>
         </Panel>
+        <div className="text-center">
+          { pagination }
+        </div>
         <hr />
         <IssueTable issues={issues} deleteIssue={this.deleteIssue} />
         <Toast 

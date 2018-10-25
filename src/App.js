@@ -19,9 +19,9 @@ const App = () => {
           <Switch>
             <Route path="/reports" component={withRouter(IssueReport)} />
             <Route path="/issues/:id" component={withRouter(IssueEdit)} />
-            <Route exact path="/issues" component={withRouter(IssueList)} />
+            <Route path="/issues" component={withRouter(IssueList)} />
             <Route exact path="/" render={() => <Redirect to="/issues" />} />
-            <Route path="*" render={() => <Redirect to="/issues" />} />
+            {/* <Route path="*" render={() => <Redirect to="/issues" />} /> */}
           </Switch>
         </div>
         <div className="footer container-fluid">

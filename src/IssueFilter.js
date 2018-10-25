@@ -10,6 +10,7 @@ import {
   ButtonToolbar,
   Button
 } from 'react-bootstrap';
+import qs from 'querystringify';
 
 class IssueFilter extends React.Component {
   constructor(props){
@@ -80,12 +81,9 @@ class IssueFilter extends React.Component {
     if (effort_gte) newFilter.effort_gte = effort_gte;
     if (effort_lte) newFilter.effort_lte = effort_lte;
 
-    let filter = "";
-    Object.keys(newFilter).map( key => {
-      filter += `${key}=${newFilter[key]}&`
-    });
+    const query = qs.stringify(newFilter);
 
-    setFilter(filter.slice(0, -1));
+    setFilter(query);
   }
 
   resetFilter() {
@@ -159,17 +157,6 @@ class IssueFilter extends React.Component {
           </FormGroup>
         </Col>
       </Row>
-      // <div>
-      //   Status:
-      //   { status }
-      //   Effort between: 
-      //   <input size={5} value={effort_gte} onChange={this.handleEffortGteChange} />
-      //   -
-      //   <input size={5} value={effort_lte} onChange={this.handleEffortLteChange} />
-      //   <button type="button" onClick={this.applyFilter}>Apply</button>
-      //   <button type="button" onClick={this.resetFilter} disabled={!changed}>Reset</button>
-      //   <button type="button" onClick={this.clearFilter}>Clear</button>
-      // </div>
     );
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Panel, Table } from 'react-bootstrap';
+import qs from 'querystringify';
 
 import IssueFilter from  './IssueFilter';
 import Toast from './Toast';
@@ -11,7 +12,7 @@ const StatRow = (props) => {
   const { owner, counts} = props;
   return (
     <tr>
-      <td>{owner}</td>
+      <th>{owner}</th>
       {
         statuses.map((status, index) => {
           return <td key={index}>{counts[status]}</td>
@@ -54,7 +55,6 @@ class IssueReport extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     this.loadData();
   }
 
@@ -98,7 +98,7 @@ class IssueReport extends React.Component {
   render() {
     const { stats, isToastVisible, toastMessage, toastType } = this.state;
     const { location: { search }} = this.props;
-    const status = statuses.map((status, index) => <td key={index}>{status}</td>);
+    const status = statuses.map((status, index) => <th key={index}>{status}</th>);
     const rows = Object.keys(stats).map((owner, index) => {
       return <StatRow key={index} owner={owner} counts={stats[owner]} />
     });
@@ -113,7 +113,7 @@ class IssueReport extends React.Component {
           </Panel.Heading>
           <Panel.Collapse>
             <Panel.Body>
-              <IssueFilter setFilter={this.setFilter} initFilter={search} />
+              <IssueFilter setFilter={this.setFilter} initFilter={qs.parse(search)} />
             </Panel.Body>
           </Panel.Collapse>
         </Panel>

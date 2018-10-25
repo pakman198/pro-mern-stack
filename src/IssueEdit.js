@@ -18,9 +18,18 @@ import DateInput from './DateInput';
 import Toast from './Toast';
 
 class IssueEdit extends React.Component {
+  static dataFetcher(id) {
+    return fetch(`/api/issues/${id}`).then(response => {
+      if(!response.ok) {
+        return response.json().then(err => Promise.reject(err));
+      } 
+
+      return response.json().then(data => ({ IssueEdit: data }));
+    })
+  }
+
   constructor() {
     super();
-
     this.state = {
       issue: {
         _id: '',
@@ -133,30 +142,24 @@ class IssueEdit extends React.Component {
 
   loadData() {
     const { match: {params: { id }}} = this.props;
-    fetch(`/api/issues/${id}`)
-      .then(response => {
-        if (response.ok) {
-          response.json().then(issue => {
-            issue.created = new Date(issue.created).toUTCString().slice(0, -13);
-            issue.completionDate = issue.completionDate !== undefined && issue.completionDate !== null
-              ? new Date(issue.completionDate) : null;
+    IssueEdit.dataFetcher(id)
+    .then(data => {
+      const issue = data.IssueEdit;
+      issue.created = new Date(issue.created).toUTCString().slice(0, -13);
+      issue.completionDate = issue.completionDate !== undefined && issue.completionDate !== null
+        ? new Date(issue.completionDate) : null;
 
-            this.setState({ issue });
-          });
-        } else {
-          response.json().then(err => {
-            this.showError(`Failed to fetch issue: ${err.message}`)
-          });
-        }
-      }).catch(err => {
-        this.showError(`Error in fetching data from server: ${err.message}`);
-      });
-  }
+      this.setState({ issue });
 
-  showValidation() {
-    this.setState({
-      isValidationVisible: true
+    }).catch(err => {
+      this.showError(`Error in fetching data from server: ${err.message}`);
     });
+}
+
+showValidation() {
+  this.setState({
+    isValidationVisible: true
+  });
   }
 
   dismissValidation() {
