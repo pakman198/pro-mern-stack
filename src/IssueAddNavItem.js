@@ -13,23 +13,16 @@ import {
   ButtonToolbar
 } from 'react-bootstrap';
 
-import Toast from './Toast';
-
 class IssueAddNavItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showing: false,
-      isToastVisible: false,
-      toastMessage: '',
-      toastType: 'success'
     }
 
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.submit = this.submit.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
   }
 
   showModal() {
@@ -41,20 +34,6 @@ class IssueAddNavItem extends React.Component {
   hideModal() {
     this.setState({
       showing: false
-    });
-  }
-
-  showError(message) {
-    this.setState({
-      isToastVisible: true,
-      toastMessage: message,
-      toastType: 'danger'
-    });
-  }
-
-  dismissToast() {
-    this.setState({
-      isToastVisible: false
     });
   }
 
@@ -81,16 +60,16 @@ class IssueAddNavItem extends React.Component {
         });
       } else {
         response.json().then(err => {
-          this.showError(`Failed to add issue ${err.message}`);
+          this.props.showError(`Failed to add issue ${err.message}`);
         });
       }
     }).catch(err => {
-      this.showError(`Error in sending data to server: ${err.message}`);
+      this.props.showError(`Error in sending data to server: ${err.message}`);
     });
   }
 
   render() {
-    const { showing, isToastVisible, toastMessage, toastType } = this.state;
+    const { showing } = this.state;
     return (
       <React.Fragment>
         <NavItem onClick={this.showModal}>
@@ -120,19 +99,14 @@ class IssueAddNavItem extends React.Component {
             </ButtonToolbar>
           </Modal.Footer>
         </Modal>
-        <Toast
-          showing={isToastVisible}
-          message={toastMessage}
-          onDismiss={this.dismissToast}
-          bsStyle={toastType}
-        />
       </React.Fragment>
     );
   }
 }
 
 IssueAddNavItem.propTypes = {
-  history: PropTypes.object // eslint-disable-line react/forbid-prop-types
+  history: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  showError: PropTypes.func.isRequired,
 }
 
 IssueAddNavItem.defaultProps = {

@@ -8,10 +8,12 @@ import {
   Glyphicon
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import PropTypes from 'prop-types';
 
 import IssueAddNavItem from './IssueAddNavItem';
+import withToast from './withToast';
 
-const Header = () => (
+const Header = (props) => (
   <Navbar fluid>
     <Navbar.Header>
       <Navbar.Brand>Issue Tracker</Navbar.Brand>
@@ -26,7 +28,7 @@ const Header = () => (
     </Nav>
     
     <Nav pullRight>
-      <IssueAddNavItem />
+      <IssueAddNavItem showError={props.showError} />
       <NavDropdown 
         id="user-dropdown"
         title={<Glyphicon glyph="option-horizontal" />}
@@ -38,4 +40,10 @@ const Header = () => (
   </Navbar>
 );
 
-export default Header;
+Header.propTypes = {
+  showError: PropTypes.func.isRequired,
+}
+
+const HeaderWithToast = withToast(Header);
+
+export default HeaderWithToast;

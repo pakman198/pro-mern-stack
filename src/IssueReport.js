@@ -4,7 +4,7 @@ import { Panel, Table } from 'react-bootstrap';
 import qs from 'querystringify';
 
 import IssueFilter from  './IssueFilter';
-import Toast from './Toast';
+import withToast from './withToast';
 
 const statuses = ['New', 'Open', 'Assigned', 'Fixed', 'Verified', 'Closed'];
 
@@ -44,14 +44,9 @@ class IssueReport extends React.Component {
     super(props);
     this.state = {
       stats: {},
-      isToastVisible: false,
-      toastMessage: '',
-      toastType: 'success'
     }
 
     this.setFilter = this.setFilter.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
   }
 
   componentDidMount() {
@@ -73,25 +68,13 @@ class IssueReport extends React.Component {
     history.push({ pathname: location.pathname, search: query });
   }
 
-  showError(message) {
-    this.setState({
-      isToastVisible: true,
-      toastMessage: message,
-      toastType: 'danger'
-    });
-  }
-
-  dismissToast() {
-    this.setState({ isToastVisible: true });
-  }
-
   loadData() {
-    const { location } = this.props;
+    const { location, showError } = this.props;
     IssueReport.dataFetcher(location)
     .then(data => {
       this.setState({ stats: data.IssueReport });
     }).catch(err => {
-      this.showError(`Error in fetching data from the server: ${err}`);
+      showError(`Error in fetching data from the server: ${err}`);
     });
   }
 
@@ -128,12 +111,6 @@ class IssueReport extends React.Component {
             { rows }
           </tbody>
         </Table>
-        <Toast 
-          showing={isToastVisible}
-          message={toastMessage}
-          onDismiss={this.dismissToast}
-          bsStyle={toastType}
-        />
       </div>
     );
   }
@@ -141,7 +118,8 @@ class IssueReport extends React.Component {
 
 IssueReport.propTypes = {
   location: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-  history: PropTypes.object // eslint-disable-line react/forbid-prop-types
+  history: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  showError: PropTypes.func.isRequired,
 }
 
 IssueReport.defaultProps = {
@@ -149,5 +127,8 @@ IssueReport.defaultProps = {
   history: {}
 }
 
-export default IssueReport;
+const IssueReportWithToast = withToast(IssueReport);
+IssueReportWithToast.dataFetcher = IssueReport.dataFetcher;
+
+export default IssueReportWithToast;
 

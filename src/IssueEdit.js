@@ -15,7 +15,7 @@ import {
 
 import NumInput from './NumInput';
 import DateInput from './DateInput';
-import Toast from './Toast';
+import withToast from './withToast';
 
 class IssueEdit extends React.Component {
   static dataFetcher(id) {
@@ -42,9 +42,6 @@ class IssueEdit extends React.Component {
       },
       invalidFields: {},
       isValidationVisible: false,
-      isToastVisible: false,
-      toastMessage: '',
-      toastType: 'success'
     }
 
     this.onChange = this.onChange.bind(this);
@@ -52,9 +49,6 @@ class IssueEdit extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.dismissValidation = this.dismissValidation.bind(this);
     this.showValidation = this.showValidation.bind(this);
-    this.showSuccess = this.showSuccess.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
   }
 
   componentDidMount() {
@@ -127,16 +121,16 @@ class IssueEdit extends React.Component {
             issue: updatedIssue
           });
 
-          this.showSuccess('Updated issue successfully.');
+          this.props.showSuccess('Updated issue successfully.');
         });
       } else {
         response.json().then(err => {
-          this.showError(`Failed to updated issue: ${err.message}`);
+          this.props.showError(`Failed to updated issue: ${err.message}`);
         });
       }
     })
     .catch(err => {
-      this.showError(`Error in sending data to the server: ${err.message}`);
+      this.props.showError(`Error in sending data to the server: ${err.message}`);
     });
   }
 
@@ -152,7 +146,7 @@ class IssueEdit extends React.Component {
       this.setState({ issue });
 
     }).catch(err => {
-      this.showError(`Error in fetching data from server: ${err.message}`);
+      this.props.showError(`Error in fetching data from server: ${err.message}`);
     });
 }
 
@@ -165,28 +159,6 @@ showValidation() {
   dismissValidation() {
     this.setState({
       isValidationVisible: false
-    });
-  }
-  
-  showSuccess(message) {
-    this.setState({
-      isToastVisible: true,
-      toastMessage: message,
-      toastType: 'success'
-    });
-  }
-
-  showError(message) {
-    this.setState({
-      isToastVisible: true,
-      toastMessage: message,
-      toastType: 'danger'
-    });
-  }
-
-  dismissToast() {
-    this.setState({ 
-      isToastVisible: false 
     });
   }
 
@@ -309,12 +281,6 @@ showValidation() {
               </Col>
             </FormGroup>
           </Form>
-          <Toast
-            showing={isToastVisible}
-            message={toastMessage}
-            onDismiss={this.dismissToast}
-            bsStyle={toastType}
-          />
         </Panel.Body>
       </Panel>
     );
@@ -322,11 +288,17 @@ showValidation() {
 }
 
 IssueEdit.propTypes = {
-  match: PropTypes.object // eslint-disable-line react/forbid-prop-types
+  match: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  showSuccess: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired,
+
 }
 
 IssueEdit.defaultProps = {
   match: {},
 };
 
-export default IssueEdit;
+const IssueEditWithToast = withToast(IssueEdit);
+IssueEditWithToast.dataFetcher = IssueEdit.dataFetcher;
+
+export default IssueEditWithToast;

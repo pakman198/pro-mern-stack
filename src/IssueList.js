@@ -6,7 +6,7 @@ import Pagination from "react-js-pagination";
 import qs from 'querystringify';
 
 import IssueFilter from './IssueFilter';
-import Toast from './Toast';
+import withToast from './withToast';
 
 const PAGE_SIZE = 10;
 
@@ -122,15 +122,10 @@ class IssueList extends React.Component {
     });
     this.state = {
       issues,
-      isToastVisbile: false,
-      toastMessage: '',
-      toastType: 'success',
       totalCount: data.metadata.totalCount,
     }
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
     this.selectPage = this.selectPage.bind(this);
   }
 
@@ -164,7 +159,7 @@ class IssueList extends React.Component {
   }
   
   loadData() {
-    const {location, location: { search }} = this.props;
+    const {location, showError} = this.props;
 
     IssueList.dataFetcher(location)
     .then(data => {
@@ -181,7 +176,7 @@ class IssueList extends React.Component {
       this.setState({ issues, totalCount });
 
     }).catch(err => {
-      this.showError('Error in fetching data from server:' + err);
+      showError('Error in fetching data from server:' + err);
     });
   }
 
@@ -189,25 +184,11 @@ class IssueList extends React.Component {
     fetch(`/api/issues/${id}`, { method: 'DELETE'})
     .then(response => {
       if(!response.ok) {
-        alert('Failed to delete issue');
+        this.props.showError('Failed to delete issue');
       } else {
         this.loadData();
       }
     });
-  }
-
-  showError(message) {
-    this.setState({
-      isToastVisbile: true,
-      toastMessage: message,
-      toastType: 'danger'
-    });
-  }
-
-  dismissToast() {
-    this.setState({
-      isToastVisbile: false
-    })
   }
 
   renderPagination() {
@@ -251,12 +232,6 @@ class IssueList extends React.Component {
         </div>
         <hr />
         <IssueTable issues={issues} deleteIssue={this.deleteIssue} />
-        <Toast 
-          showing={isToastVisbile}
-          message={toastMessage}
-          onDismiss={this.dismissToast}
-          bsStyle={toastType} 
-        />
       </div>
     );
   }
@@ -264,12 +239,16 @@ class IssueList extends React.Component {
 
 IssueList.propTypes = {
   location: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-  history: PropTypes.object // eslint-disable-line react/forbid-prop-types
+  history: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  showError: PropTypes.func.isRequired
 }
 
 IssueList.defaultProps = {
   location: {},
   history: {}
 }
+
+const IssueListWithToast = withToast(IssueList);
+IssueListWithToast.dataFetcher = IssueList.dataFetcher;
   
-export default IssueList;
+export default IssueListWithToast;
