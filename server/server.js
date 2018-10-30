@@ -5,7 +5,6 @@ import { MongoClient, ObjectID } from 'mongodb';
 import SourceMapSupport from 'source-map-support';
 import Issue from './issue';
 import '@babel/polyfill';
-import { cursorTo } from 'readline';
 
 SourceMapSupport.install();
 
@@ -62,8 +61,6 @@ app.get('/api/issues/:id', (req, res) => {
 app.get('/api/issues', (req, res) => {
     const filter = {};
 
-    console.log(req.query)
-
     if (req.query.status) filter.status = req.query.status;
     if (req.query.effort_lte || req.query.effort_gte) filter.effort = {};
     if (req.query.effort_gte) filter.effort.$gte = parseInt(req.query.effort_gte, 10);
@@ -74,8 +71,6 @@ app.get('/api/issues', (req, res) => {
         const offset = req.query._offset ? parseInt(req.query._offset, 10) : 0;
         let limit = req.query._limit ? parseInt(req.query._limit, 10) : 20;
         if (limit > 50 ) limit = 50;
-
-        console.log({limit})
 
         const cursor = db.collection('issues')
             .find(filter).sort({ _id: 1 }).skip(offset).limit(limit);
