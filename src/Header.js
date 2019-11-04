@@ -11,7 +11,7 @@ import {
 import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/async'
 
 import IssueAddNavItem from './IssueAddNavItem';
 import withToast from './withToast';

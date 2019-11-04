@@ -1,10 +1,11 @@
-import express from 'express';
-import path from 'path';
-import  bodyParser from 'body-parser';
-import { MongoClient, ObjectID } from 'mongodb';
-import SourceMapSupport from 'source-map-support';
-import Issue from './issue';
-import '@babel/polyfill';
+require('dotenv').config({ path: '.env'})
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const { MongoClient, ObjectID } = require('mongodb');
+const SourceMapSupport = require('source-map-support');
+const Issue = require('./issue');
+// require'@babel/polyfill';
 
 SourceMapSupport.install();
 
@@ -14,19 +15,19 @@ app.use(express.static('static'));
 app.set('json spaces', 2); // makes the json response look pretty 
 app.use(bodyParser.json());
 
-if(process.env.NODE_ENV !== 'production') {
-    const webpack = require('webpack');
-    const webpackDevMiddleware = require('webpack-dev-middleware');
-    const webpackHotMiddleware = require('webpack-hot-middleware');
+// if(process.env.NODE_ENV !== 'production') {
+//     const webpack = require('webpack');
+//     const webpackDevMiddleware = require('webpack-dev-middleware');
+//     const webpackHotMiddleware = require('webpack-hot-middleware');
 
-    const config = require('../webpack.config');
-    config.entry.app.push('webpack-hot-middleware/client', 'webpack/hot/only-dev-server');
-    config.plugins.push(new webpack.HotModuleReplacementPlugin());
+//     const config = require('../webpack.config');
+//     config.entry.app.push('webpack-hot-middleware/client', 'webpack/hot/only-dev-server');
+//     config.plugins.push(new webpack.HotModuleReplacementPlugin());
     
-    const bundler = webpack(config);
-    app.use(webpackDevMiddleware(bundler, { noInfo: true }));
-    app.use(webpackHotMiddleware(bundler, { log: console.log }));
-}
+//     const bundler = webpack(config);
+//     app.use(webpackDevMiddleware(bundler, { noInfo: true }));
+//     app.use(webpackHotMiddleware(bundler, { log: console.log }));
+// }
 
 app.get('/api/issues/:id', (req, res) => {
     let issueId;
@@ -205,12 +206,19 @@ app.get('/*', (req, res) => {
 });
 
 let db;
-MongoClient.connect('mongodb://localhost/issuetracker').then(connection => {
-    db = connection.db('issuetracker');
-    
-    app.listen(3000, function(){
-        console.log('App listening on port 3000');
-    }); 
-}).catch(err => {
-    console.log('ERROR:', err);
+const mongoClient = new MongoClient(process.env.MONGODB_URI, { 
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+});
+mongoClient.connect((err, client) => {
+	db = client.db('issuetracker');
+	
+	app.listen(3000, function(){
+		console.log('App listening on port 3000');
+	}); 
+
+	if(err) {
+		console.log('ERROR:', err);
+	}
+  
 });

@@ -48,7 +48,7 @@ function convertIssue(issue) {
     return cleanupIssue(issue);
 }
 
-export default {
+module.exports = {
     validateIssue,
     cleanupIssue,
     convertIssue
