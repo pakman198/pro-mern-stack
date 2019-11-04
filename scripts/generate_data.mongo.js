@@ -10,6 +10,7 @@ const mongoClient = new MongoClient(process.env.MONGODB_URI, {
 mongoClient.connect((err, client) => {
   // console.log({ err, client })
   const db = client.db(process.env.DB_NAME);
+  db.collection(process.env.DB_COLLECTION).remove({});
   const owners = ['Roger', 'Eddie', 'Karen', 'Helen', 'Victor', 'Violet'];
   const statuses = ['New', 'Open', 'Assigned', 'Fixed', 'Verified', 'Closed'];
   const issues = [];
@@ -35,6 +36,11 @@ mongoClient.connect((err, client) => {
   db.collection(process.env.DB_COLLECTION).insertMany(issues, (err, result) => {
     console.log({ err, result });
   });
+
+  db.collection(process.env.DB_COLLECTION).createIndex({ status: 1 });
+  db.collection(process.env.DB_COLLECTION).createIndex({ owner: 1 });
+  db.collection(process.env.DB_COLLECTION).createIndex({ created: 1 });
+  db.collection(process.env.DB_COLLECTION).createIndex({ title: "text" });
   
   client.close();
 });
