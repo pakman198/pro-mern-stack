@@ -16,15 +16,16 @@ class Toast extends React.Component {
   }
 
   render() {
-    const { showing, bsStyle, onDismiss, message } = this.props;
+    const { showing, variant, onClose, message } = this.props;
     
     return (
       <Collapse in={showing}>
         <div style={{ position: 'fixed', top: 30, left: 0, right: 0, textAlign: 'center' }}>
           <Alert
             style={{ display: 'inline-block', width: 500 }}
-            bsStyle={bsStyle}
-            onDismiss={onDismiss}
+            variant={variant}
+            onClose={onClose}
+            dismissible
           >
             { message }
           </Alert>
@@ -35,13 +36,13 @@ class Toast extends React.Component {
 }
 Toast.propTypes = {
   showing: PropTypes.bool.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  bsStyle: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+  variant: PropTypes.string,
   message: PropTypes.any // eslint-disable-line react/forbid-prop-types
 }
 
 Toast.defaultProps = {
-  bsStyle: 'success',
+  variant: 'success',
   message: ''
 }
 

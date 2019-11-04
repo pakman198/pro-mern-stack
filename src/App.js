@@ -14,7 +14,7 @@ const App = () => {
   return (
     <Router history={customHistory}>
       <React.Fragment>
-        {/* <Header /> */}
+        <Header />
         <div className="container-fluid">
           <Switch>
             <Route path="/reports" component={withRouter(IssueReport)} />

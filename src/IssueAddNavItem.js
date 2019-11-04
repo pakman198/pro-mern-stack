@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import {
-  NavItem,
-  Glyphicon,
   Modal,
   Form,
   FormGroup,
   FormControl,
-  ControlLabel,
+  FormLabel,
   Button,
   ButtonToolbar
 } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 class IssueAddNavItem extends React.Component {
   constructor(props) {
@@ -72,10 +72,10 @@ class IssueAddNavItem extends React.Component {
     const { showing } = this.state;
     return (
       <React.Fragment>
-        <NavItem onClick={this.showModal}>
-          <Glyphicon glyph="plus" /> 
+        <Button variant="outline-success" onClick={this.showModal}>
+          <FontAwesomeIcon icon={faPlus} />
           &nbsp;Create Issue
-        </NavItem>
+        </Button>
         <Modal keyboard show={showing} onHide={this.hideModal}>
           <Modal.Header closeButton>
             <Modal.Title>Create Issue</Modal.Title>
@@ -83,19 +83,19 @@ class IssueAddNavItem extends React.Component {
           <Modal.Body>
             <Form name="issueAdd">
               <FormGroup>
-                <ControlLabel>Title</ControlLabel>
+                <FormLabel>Title</FormLabel>
                 <FormControl type="text" name="title" autoFocus />
               </FormGroup>
               <FormGroup>
-                <ControlLabel>Owner</ControlLabel>
+                <FormLabel>Owner</FormLabel>
                 <FormControl type="text" name="owner" />
               </FormGroup>
             </Form>
           </Modal.Body>
           <Modal.Footer>
             <ButtonToolbar>
-              <Button type="button" bsStyle="primary" onClick={this.submit}>Submit</Button>
-              <Button bsStyle="link" onClick={this.hideModal}>Cancel</Button>
+              <Button variant="primary" className="mr-2" onClick={this.submit}>Submit</Button>
+              <Button variant="danger" onClick={this.hideModal}>Cancel</Button>
             </ButtonToolbar>
           </Modal.Footer>
         </Modal>

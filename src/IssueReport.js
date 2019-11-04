@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Panel, Table } from 'react-bootstrap';
+import { Accordion, Card, Table, Button } from 'react-bootstrap';
 import qs from 'querystringify';
 
 import IssueFilter from  './IssueFilter';
@@ -90,7 +90,7 @@ class IssueReport extends React.Component {
 
     return (
       <div>
-        <Panel>
+        {/* <Panel>
           <Panel.Heading>
             <Panel.Title toggle>Filter</Panel.Title>
           </Panel.Heading>
@@ -99,8 +99,26 @@ class IssueReport extends React.Component {
               <IssueFilter setFilter={this.setFilter} initFilter={qs.parse(search)} />
             </Panel.Body>
           </Panel.Collapse>
-        </Panel>
-        <Table bordered condensed hover responsive>
+        </Panel> */}
+
+        <Accordion>
+          <Card>
+            <Card.Header style={{ marginBottom: 0}}>
+              <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                Filter
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <Card.Body style={{ borderBottom: "1px solid rgba(0,0,0,.125)"}}>
+                <IssueFilter setFilter={this.setFilter} initFilter={qs.parse(search)} />
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
+
+        <br/>
+
+        <Table bordered hover responsive>
           <thead>
             <tr>
               <th />

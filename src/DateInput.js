@@ -96,7 +96,7 @@ class DateInput extends React.Component {
 DateInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  onValidityChange: PropTypes.func.isRequired,
+  // onValidityChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired
 }
 
