@@ -7,7 +7,7 @@ The code here presented is a [JIRA-like](https://www.atlassian.com/software/jira
 
 The application runs local MongoDB but it can easily be changed to use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas?jmp=homepage).
 
-### Tech
+## Tech
 
 Besides the open source projects described on the MERN stack, this app uses several packages to work properly:
 
@@ -18,25 +18,26 @@ Besides the open source projects described on the MERN stack, this app uses seve
 * [querystringify](https://github.com/unshiftio/querystringify) - simple but powerful query string parser.
 
 
-### Installation
+## Installation
 
 This app requires [Node.js](https://nodejs.org/) v8+ to run.
 
-You need to install mongo on your computer, create a database and fill it with some data. For simplicity, we will use 2 scripts:
-```
-mongod // to initialize the mongo server
-$ cd scripts
-$ mongo init.mongo.js
-$ mongo generate_data.mongo.js
-```
+* Make a symlink to `bootstrap/dist` inside the `static` folder.
+* Create an account in MongoDB Atlas and then create a database and a collection. 
+* Change the name of the `.env.example` file to `.env` and replace the values with the ones from your database and collection.
 
-Install the dependencies and devDependencies and start the application.
+## Available Scripts
 
-```sh
-$ npm install
-$ npm run dev-all
-```
+### `npm run populate`
+This command will generate dummy data on the database.
 
-### Todos
+### `npm run start:server`
+Initialize the node server that will work as our API
 
+### `npm run watch`
+Initializes the react app
+
+## Todos
+
+ - Check if I still need to run `init.mongo.js` to generate the indexes
  - Server Side Render

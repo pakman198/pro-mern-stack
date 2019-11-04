@@ -9,7 +9,7 @@ const mongoClient = new MongoClient(process.env.MONGODB_URI, {
 
 mongoClient.connect((err, client) => {
   // console.log({ err, client })
-  const db = client.db('issuetracker');
+  const db = client.db(process.env.DB_NAME);
   const owners = ['Roger', 'Eddie', 'Karen', 'Helen', 'Victor', 'Violet'];
   const statuses = ['New', 'Open', 'Assigned', 'Fixed', 'Verified', 'Closed'];
   const issues = [];
@@ -32,7 +32,7 @@ mongoClient.connect((err, client) => {
     issue.title = 'Lorem ipsum dolor sit amet' + i;
     issues.push(issue);
   }
-  db.collection('issues').insertMany(issues, (err, result) => {
+  db.collection(process.env.DB_COLLECTION).insertMany(issues, (err, result) => {
     console.log({ err, result });
   });
   

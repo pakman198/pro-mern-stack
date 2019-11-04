@@ -7,6 +7,7 @@
     "start:server": "nodemon server/server.js",
     "populate": "node scripts/generate_data.mongo.js",
     "watch": "webpack-dev-server",
+    
     "compile-server": "babel server --presets @babel/preset-env --out-dir dist --source-maps",
     "watch-server": "babel server --presets @babel/preset-env --out-dir dist --source-maps --watch",
     "start-hook": "nodemon -w server server/start_hook.js",

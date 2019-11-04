@@ -73,7 +73,7 @@ app.get('/api/issues', (req, res) => {
         let limit = req.query._limit ? parseInt(req.query._limit, 10) : 20;
         if (limit > 50 ) limit = 50;
 
-        const cursor = db.collection('issues')
+        const cursor = db.collection(process.env.DB_COLLECTION)
             .find(filter).sort({ _id: 1 }).skip(offset).limit(limit);
 
         let totalCount;
@@ -136,8 +136,8 @@ app.post('/api/issues', (req, res) => {
         return;
     }
 
-    db.collection('issues').insertOne(Issue.cleanupIssue(newIssue)).then(result => 
-        db.collection('issues').find({ _id: result.insertedId }).limit(1).next()
+    db.collection(process.env.DB_COLLECTION).insertOne(Issue.cleanupIssue(newIssue)).then(result => 
+        db.collection(process.env.DB_COLLECTION).find({ _id: result.insertedId }).limit(1).next()
     ).then(newIssue => {
         res.json(newIssue);
     }).catch(err => {
@@ -165,8 +165,8 @@ app.put('/api/issues/:id', (req, res) => {
         return;
     }
 
-    db.collection('issues').update({ _id: issueId}, Issue.convertIssue(issue))
-    .then(() => db.collection('issues').find({ _id: issueId}).limit(1).next())
+    db.collection(process.env.DB_COLLECTION).update({ _id: issueId}, Issue.convertIssue(issue))
+    .then(() => db.collection(process.env.DB_COLLECTION).find({ _id: issueId}).limit(1).next())
     .then( savedIssue => {
         res.json(savedIssue);
     })
@@ -186,7 +186,7 @@ app.delete('/api/issues/:id', (req, res) => {
         return;
     }
 
-    db.collection('issues').deleteOne({ _id: issueId })
+    db.collection(process.env.DB_COLLECTION).deleteOne({ _id: issueId })
     .then(deleteResult => {
         const { n } = deleteResult.result;
         if(n === 1) {
@@ -211,7 +211,7 @@ const mongoClient = new MongoClient(process.env.MONGODB_URI, {
 	useUnifiedTopology: true
 });
 mongoClient.connect((err, client) => {
-	db = client.db('issuetracker');
+	db = client.db(process.env.DB_NAME);
 	
 	app.listen(3000, function(){
 		console.log('App listening on port 3000');

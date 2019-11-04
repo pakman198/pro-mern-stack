@@ -14,7 +14,7 @@ class DateInput extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     const { value } = this.props;
     if(newProps.value !== value) {
       this.setState({

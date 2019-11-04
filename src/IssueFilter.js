@@ -31,7 +31,7 @@ class IssueFilter extends React.Component {
     this.clearFilter = this.clearFilter.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     const { initFilter: { status, effort_gte, effort_lte }} = newProps;
     this.setState({
       status: status || '',
