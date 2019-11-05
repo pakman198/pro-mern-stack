@@ -2,16 +2,15 @@ import React from 'react';
 import {
   Navbar,
   Nav,
-  NavItem,
   NavDropdown,
-  MenuItem,
-  Glyphicon,
   Col
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faEllipsisH } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/async'
 
 import IssueAddNavItem from './IssueAddNavItem';
 import withToast from './withToast';
@@ -54,23 +53,21 @@ const Header = (props) => {
   }
 
   return (
-    <Navbar fluid style={{zIndex: 5}}>
+    <Navbar bg="light" className="mb-3" style={{zIndex: 5}}>
       <Col sm={5}>
-        <Navbar.Header>
-          <Navbar.Brand>Issue Tracker</Navbar.Brand>
-        </Navbar.Header>
         <Nav>
+          <Navbar.Brand>Issue Tracker</Navbar.Brand>
           <LinkContainer to="/issues">
-            <NavItem>Issues</NavItem>
+            <Nav.Link>Issues</Nav.Link>
           </LinkContainer>
           <LinkContainer to="/reports">
-            <NavItem>Reports</NavItem>
+            <Nav.Link>Reports</Nav.Link>
           </LinkContainer>
         </Nav>
       </Col>
       
       <Col sm={4}>
-        <div style={{ paddingTop: 8}}>
+        <div>
           <AsyncSelect
             placeholder="Search&hellip;"
             loadOptions={searchIssues}
@@ -80,14 +77,13 @@ const Header = (props) => {
       </Col>
 
       <Col sm={3}>
-        <Nav pullRight>
+        <Nav>
           <IssueAddNavItem showError={props.showError} />
           <NavDropdown 
-            id="user-dropdown"
-            title={<Glyphicon glyph="option-horizontal" />}
-            noCaret
+            className="user-dropdown"
+            title={<FontAwesomeIcon icon={faEllipsisH} />}
           >
-            <MenuItem>LogOut</MenuItem>
+            <NavDropdown.Item>LogOut</NavDropdown.Item>
           </NavDropdown>
         </Nav>
       </Col>

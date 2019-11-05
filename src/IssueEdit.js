@@ -4,18 +4,20 @@ import { LinkContainer } from 'react-router-bootstrap';
 import {
   FormGroup,
   FormControl,
-  ControlLabel,
+  FormLabel,
   ButtonToolbar,
   Button,
-  Panel,
+  Card,
   Form,
   Col,
-  Alert
+  Alert,
+  Row
 } from 'react-bootstrap';
 
 import NumInput from './NumInput';
 import DateInput from './DateInput';
 import withToast from './withToast';
+import { CardBody } from 'react-bootstrap/Card';
 
 class IssueEdit extends React.Component {
   static dataFetcher(id) {
@@ -148,12 +150,12 @@ class IssueEdit extends React.Component {
     }).catch(err => {
       this.props.showError(`Error in fetching data from server: ${err.message}`);
     });
-}
+  }
 
-showValidation() {
-  this.setState({
-    isValidationVisible: true
-  });
+  showValidation() {
+    this.setState({
+      isValidationVisible: true
+    });
   }
 
   dismissValidation() {
@@ -185,31 +187,29 @@ showValidation() {
       ? issue.completionDate.toISOString().substr(0, 10) : null;
 
     return (
-      <Panel>
-        <Panel.Heading>
-          <Panel.Title>Edit Issue</Panel.Title>
-        </Panel.Heading>
-        <Panel.Body>
-          <Form horizontal onSubmit={this.onSubmit}>
-            <FormGroup>
-              <Col componentClass={ControlLabel} sm={3}>ID</Col>
+      <Card>
+        <Card.Body>
+          <Card.Title>Edit Issue</Card.Title>
+          <Form onSubmit={this.onSubmit}>
+            <FormGroup as={Row}>
+              <Col sm={3}>ID</Col>
               <Col sm={9}>
-                <FormControl.Static>{ issue._id }</FormControl.Static>
+                <FormControl plaintext readOnly defaultValue={ issue._id } />
               </Col>
             </FormGroup>
             
-            <FormGroup>
-              <Col componentClass={ControlLabel} sm={3}>Created</Col>
+            <FormGroup as={Row}>
+              <Col sm={3}>Created</Col>
               <Col sm={9}>
-                <FormControl.Static>{ issue.created }</FormControl.Static>
+                <FormControl plaintext readOnly defaultValue={ issue.created } />
               </Col>
             </FormGroup>
 
-            <FormGroup>
-              <Col componentClass={ControlLabel} sm={3}>Status</Col>
+            <FormGroup as={Row}>
+              <Col sm={3}>Status</Col>
               <Col sm={9}>
                 <FormControl
-                  componentClass="select"
+                  as="select"
                   name="status"
                   value={issue.status}
                   onChange={this.onChange}
@@ -224,18 +224,18 @@ showValidation() {
               </Col>
             </FormGroup>
 
-            <FormGroup>
-              <Col componentClass={ControlLabel} sm={3}>Owner</Col>
+            <FormGroup as={Row}>
+              <Col sm={3}>Owner</Col>
               <Col sm={9}>
                 <FormControl name="owner" value={issue.owner} onChange={this.onChange} />
               </Col>
             </FormGroup>
 
-            <FormGroup>
-              <Col componentClass={ControlLabel} sm={3}>Effort</Col>
+            <FormGroup as={Row}>
+              <Col sm={3}>Effort</Col>
               <Col sm={9}>
                 <FormControl 
-                  componentClass={NumInput}
+                  as={NumInput}
                   name="effort"
                   value={issue.effort}
                   onChange={this.onChange}
@@ -243,46 +243,45 @@ showValidation() {
               </Col>
             </FormGroup>
 
-            <FormGroup validationState={invalidFields.completionDate ? 'error' : null}>
-              <Col componentClass={ControlLabel} sm={3}>Completion Date</Col>
+            <FormGroup as={Row}>
+              <Col sm={3}>Completion Date</Col>
               <Col sm={9}>
                 <FormControl 
-                  componentClass={DateInput}
+                  as={DateInput}
                   name="completionDate"
                   value={completionDate} 
                   onChange={this.onChange}
-                  onValidityChange={this.onValidityChange}
                 />
                 <FormControl.Feedback />
               </Col>
             </FormGroup>
 
-            <FormGroup>
-              <Col componentClass={ControlLabel} sm={3}>Title</Col>
+            <FormGroup as={Row}>
+              <Col sm={3}>Title</Col>
               <Col sm={9}>
                 <FormControl name="title" value={issue.title} onChange={this.onChange} />
               </Col>
             </FormGroup>            
 
-            <FormGroup>
-              <Col smOffset={3} sm={6}>
+            <FormGroup as={Row}>
+              <Col sm={{ span: 6, offset: 3}}>
                 <ButtonToolbar>
-                  <Button bsStyle="primary" type="submit">Submit</Button>
+                  <Button variant="primary" type="submit">Submit</Button>
                   <LinkContainer to="/issues">
-                    <Button bsStyle="link">Back</Button>
+                    <Button variant="link">Back</Button>
                   </LinkContainer>
                 </ButtonToolbar>
               </Col>
             </FormGroup>
 
-            <FormGroup>
-              <Col smOffset={3} sm={9}>
+            <FormGroup as={Row}>
+              <Col sm={{ span: 9, offset: 3}}>
                 { validationMessage }
               </Col>
             </FormGroup>
           </Form>
-        </Panel.Body>
-      </Panel>
+        </Card.Body>
+      </Card>
     );
   } 
 }

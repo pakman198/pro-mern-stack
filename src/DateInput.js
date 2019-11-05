@@ -14,7 +14,7 @@ class DateInput extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     const { value } = this.props;
     if(newProps.value !== value) {
       this.setState({
@@ -96,7 +96,7 @@ class DateInput extends React.Component {
 DateInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  onValidityChange: PropTypes.func.isRequired,
+  // onValidityChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired
 }
 

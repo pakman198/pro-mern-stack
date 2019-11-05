@@ -48,8 +48,8 @@ function withToast(OriginalComponent) {
           <Toast
             showing={isToastVisible}
             message={toastMessage}
-            bsStyle={toastType}
-            onDismiss={this.dismissToast}
+            variant={toastType}
+            onClose={this.dismissToast}
           />
         </div>
       );

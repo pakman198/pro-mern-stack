@@ -5,7 +5,7 @@ import {
   Row,
   FormGroup,
   FormControl,
-  ControlLabel,
+  FormLabel,
   InputGroup,
   ButtonToolbar,
   Button
@@ -31,7 +31,7 @@ class IssueFilter extends React.Component {
     this.clearFilter = this.clearFilter.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) {
     const { initFilter: { status, effort_gte, effort_lte }} = newProps;
     this.setState({
       status: status || '',
@@ -108,9 +108,9 @@ class IssueFilter extends React.Component {
 
     return (
       <FormGroup>
-        <ControlLabel>Status</ControlLabel>
+        <FormLabel>Status</FormLabel>
         <FormControl
-          componentClass="select"
+          as="select"
           value={status}
           onChange={this.handleStatusChange}
         >
@@ -137,10 +137,10 @@ class IssueFilter extends React.Component {
 
         <Col xs={6} sm={4} md={3}>
           <FormGroup>
-            <ControlLabel>Effort</ControlLabel>
+            <FormLabel>Effort</FormLabel>
             <InputGroup>
               <FormControl value={effort_gte} onChange={this.handleEffortGteChange} />
-              <InputGroup.Addon>-</InputGroup.Addon>
+              <InputGroup.Text>-</InputGroup.Text>
               <FormControl value={effort_lte} onChange={this.handleEffortLteChange} />
             </InputGroup>
           </FormGroup>
@@ -148,11 +148,11 @@ class IssueFilter extends React.Component {
 
         <Col xs={12} sm={4} md={3}>
           <FormGroup>
-            <ControlLabel>&nbsp;</ControlLabel>
+            <FormLabel>&nbsp;</FormLabel>
             <ButtonToolbar>
-              <Button bsStyle="primary" onClick={this.applyFilter}>Apply</Button>
-              <Button onClick={this.resetFilter} disabled={!changed}>Reset</Button>
-              <Button onClick={this.clearFilter}>Clear</Button>
+              <Button variant="primary" className="mr-1" onClick={this.applyFilter}>Apply</Button>
+              <Button variant="secondary" className="mr-1" onClick={this.resetFilter} disabled={!changed}>Reset</Button>
+              <Button variant="success" onClick={this.clearFilter}>Clear</Button>
             </ButtonToolbar>
           </FormGroup>
         </Col>

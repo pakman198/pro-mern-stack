@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
+import { Button,  Table, Accordion, Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import Pagination from "react-js-pagination";
 import qs from 'querystringify';
 
@@ -39,9 +41,9 @@ const IssueRow = (props) => {
       <td>{ effort }</td>
       <td>{ completionDate ? completionDate.toUTCString().slice(0, -13) : '' }</td>
       <td>{ title }</td>
-      <td>
-        <Button bsSize="xsmall" onClick={onDeleteClick}>
-          <Glyphicon glyph="trash" />
+      <td style={{ textAlign: "center" }}>
+        <Button size="sm" variant="danger" onClick={onDeleteClick}>
+          <FontAwesomeIcon icon={faTrash} />
         </Button>
       </td>
     </tr>
@@ -60,7 +62,7 @@ const IssueTable = (props) => {
   );
   
   return (
-    <Table bordered condensed hover responsive>
+    <Table bordered hover responsive>
       <thead>
         <tr>
           <th>Id</th>
@@ -204,6 +206,9 @@ class IssueList extends React.Component {
         totalItemsCount={totalCount}
         pageRangeDisplayed={10}
         onChange={this.selectPage}
+        itemClass="page-item"
+        linkClass="page-link"
+        style={{ display: "inline-flex", marginBotom: 0 }}
       />
     )
     
@@ -217,17 +222,22 @@ class IssueList extends React.Component {
 
     return (
       <div className="issueList">
-        <Panel>
-          <Panel.Heading>
-            <Panel.Title toggle>Filter</Panel.Title>
-          </Panel.Heading>
-          <Panel.Collapse>
-            <Panel.Body>
-              <IssueFilter setFilter={this.setFilter} initFilter={query} />
-            </Panel.Body>
-          </Panel.Collapse>
-        </Panel>
-        <div className="text-center">
+        <Accordion>
+          <Card>
+            <Card.Header style={{ marginBottom: 0}}>
+              <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                Filter
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <Card.Body style={{ borderBottom: "1px solid rgba(0,0,0,.125)"}}>
+                <IssueFilter setFilter={this.setFilter} initFilter={query} />
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
+        
+        <div className="text-center mt-4" >
           { pagination }
         </div>
         <hr />

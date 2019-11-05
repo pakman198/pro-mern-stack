@@ -1,0 +1,7 @@
+.pagination {
+  display: inline-flex;
+}
+
+.user-dropdown .dropdown-toggle::after {
+  display: none;
+}

@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import createHistory from "history/createBrowserHistory";
+import { createBrowserHistory } from "history";
 
 import Header from './Header';
 import IssueList from './IssueList';
 import IssueEdit from './IssueEdit';
 import IssueReport from './IssueReport';
 
-const customHistory = createHistory();
+const customHistory = createBrowserHistory();
 
 const App = () => {
   return (
