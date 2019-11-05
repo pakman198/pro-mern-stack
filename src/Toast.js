@@ -17,10 +17,18 @@ class Toast extends React.Component {
 
   render() {
     const { showing, variant, onClose, message } = this.props;
+    const styles = {
+      position: 'fixed', 
+      top: 60, 
+      left: 0, 
+      right: 0, 
+      textAlign: 'center',
+      zIndex: 5
+    }
     
     return (
       <Collapse in={showing}>
-        <div style={{ position: 'fixed', top: 30, left: 0, right: 0, textAlign: 'center' }}>
+        <div style={styles}>
           <Alert
             style={{ display: 'inline-block', width: 500 }}
             variant={variant}

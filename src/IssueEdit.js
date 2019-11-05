@@ -186,36 +186,6 @@ class IssueEdit extends React.Component {
     const completionDate = issue.completionDate 
       ? issue.completionDate.toISOString().substr(0, 10) : null;
 
-
-    // return (
-    //   <Card>
-    //     <Card.Body>
-    //       <Card.Title>HOLA</Card.Title>
-    //       <Form onSubmit={this.onSubmit}>
-    //         <Form.Row>
-    //           <Form.Group as={Row} controlId="formHorizontalEmail">
-    //             <Form.Label column sm={3}>
-    //               ID
-    //             </Form.Label>
-    //             <Col sm={9}>
-    //               <FormControl plaintext readOnly defaultValue={ issue._id } />
-    //             </Col>
-    //           </Form.Group>
-
-    //           <Form.Group as={Row} controlId="formHorizontalEmail">
-    //             <Form.Label column sm={3}>
-    //               Email
-    //             </Form.Label>
-    //             <Col sm={9}>
-    //               <Form.Control type="email" placeholder="Email" />
-    //             </Col>
-    //           </Form.Group>
-    //         </Form.Row>
-    //       </Form>
-    //     </Card.Body>
-    //   </Card>
-    // );
-
     return (
       <Card>
         <Card.Body>
